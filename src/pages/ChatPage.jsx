@@ -63,9 +63,10 @@ if (!input.trim() && !file) return;
     if (currentFile) {
       formData.append("file", currentFile);
     }
-
+    console.log(import.meta.env.VITE_WEBHOOK_URL);
     const response = await fetch(
-      "http://localhost:5678/webhook-test/AI_agent",
+      
+      import.meta.env.VITE_WEBHOOK_URL,
       {
         method: "POST",
         body: formData,
