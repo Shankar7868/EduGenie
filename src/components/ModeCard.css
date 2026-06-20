@@ -1,0 +1,53 @@
+.mode-card {
+  width: 320px;
+  min-height: 200px;
+
+  background: #2f2f2f;
+
+  border: 1px solid #3a3a3a;
+  border-radius: 18px;
+
+  padding: 24px;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  transition: all 0.25s ease;
+}
+
+.mode-card:hover {
+  transform: translateY(-6px);
+
+  border-color: #10a37f;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.mode-card-content h2 {
+  margin: 0;
+
+  font-size: 1.5rem;
+
+  color: white;
+}
+
+.mode-card-content p {
+  margin-top: 12px;
+
+  color: #bdbdbd;
+
+  line-height: 1.6;
+}
+
+.mode-card-arrow {
+  align-self: flex-end;
+
+  font-size: 28px;
+
+  color: #10a37f;
+
+  font-weight: bold;
+}

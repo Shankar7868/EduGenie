@@ -1,0 +1,91 @@
+.chat-input-wrapper {
+  padding: 16px 20px;
+  border-top: 1px solid #333;
+  background: #212121;
+}
+
+.selected-file {
+  color: #c5c5c5;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.upload-button {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #2f2f2f;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+
+  font-size: 24px;
+  font-weight: bold;
+
+  flex-shrink: 0;
+}
+
+.upload-button:hover {
+  background: #3a3a3a;
+}
+
+.chat-input-container textarea {
+  flex: 1;
+
+  resize: none;
+
+  border: none;
+  outline: none;
+
+  background: #2f2f2f;
+  color: white;
+
+  border-radius: 14px;
+
+  padding: 14px;
+
+  font-size: 15px;
+
+  min-height: 55px;
+  max-height: 150px;
+}
+
+.send-button {
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #10a37f;
+  color: white;
+
+  cursor: pointer;
+
+  font-size: 18px;
+  font-weight: bold;
+
+  flex-shrink: 0;
+}
+
+.send-button:hover {
+  opacity: 0.9;
+}
+
+.send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
