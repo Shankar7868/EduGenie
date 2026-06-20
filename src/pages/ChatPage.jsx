@@ -63,7 +63,6 @@ if (!input.trim() && !file) return;
     if (currentFile) {
       formData.append("file", currentFile);
     }
-    console.log(import.meta.env.VITE_WEBHOOK_URL);
     const response = await fetch(
       
       import.meta.env.VITE_WEBHOOK_URL,
