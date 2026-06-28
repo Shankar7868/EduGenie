@@ -56,7 +56,7 @@ export default function ChatMessage({ role, content }) {
           }
         }
         for (const key in sections) {
-          sections[key] = sections[key].join('\n');
+          sections[key] = sections[key].join('\n\n').replace(/•\s*/g, '\n- ');
         }
         if (Object.keys(sections).length > 0) {
           setSummaryData(sections);
@@ -79,7 +79,7 @@ export default function ChatMessage({ role, content }) {
           }
         }
         for (const key in sections) {
-          sections[key] = sections[key].join('\n');
+          sections[key] = sections[key].join('\n\n').replace(/•\s*/g, '\n- ');
         }
         if (Object.keys(sections).length > 0) {
           setKeypointsData(sections);
