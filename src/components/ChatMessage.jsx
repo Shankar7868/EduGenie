@@ -6,7 +6,6 @@ import "./ChatMessage.css";
 export default function ChatMessage({ role, content }) {
   const [copied, setCopied] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeTab, setActiveTab] = useState("chat"); // "chat" or "flashcards"
   const [flashcards, setFlashcards] = useState([]);
   const [flippedCards, setFlippedCards] = useState({});
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -134,7 +133,7 @@ export default function ChatMessage({ role, content }) {
   };
 
   useEffect(() => {
-    if (activeTab !== "flashcards" || flashcards.length === 0) return;
+    if (flashcards.length === 0) return;
     
     const handleKeyDown = (e) => {
       if (e.key === "ArrowRight") {
@@ -146,7 +145,7 @@ export default function ChatMessage({ role, content }) {
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeTab, flashcards.length, currentCardIndex]);
+  }, [flashcards.length, currentCardIndex]);
 
   const isUser = role === "user";
 
@@ -165,22 +164,6 @@ export default function ChatMessage({ role, content }) {
         </div>
 
         <div className="message-actions">
-          {flashcards.length > 0 && !isUser && (
-            <div className="view-tabs">
-              <button
-                className={`tab-btn ${activeTab === "chat" ? "active" : ""}`}
-                onClick={() => setActiveTab("chat")}
-              >
-                Chat View
-              </button>
-              <button
-                className={`tab-btn study-btn ${activeTab === "flashcards" ? "active" : ""}`}
-                onClick={() => setActiveTab("flashcards")}
-              >
-                Flashcards ({flashcards.length})
-              </button>
-            </div>
-          )}
 
           {!isUser && (
             <button
@@ -199,7 +182,7 @@ export default function ChatMessage({ role, content }) {
       </div>
 
       <div className={`message-bubble ${isUser ? "user-message" : "assistant-message"}`}>
-        {activeTab === "flashcards" && flashcards.length > 0 ? (
+        {flashcards.length > 0 && !isUser ? (
           <div className="flashcards-carousel-container">
             <div className="flashcards-carousel-controls">
               <button 
