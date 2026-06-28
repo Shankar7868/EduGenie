@@ -46,7 +46,7 @@ export default function Home() {
     },
     {
       title: "Export & Download",
-      desc: "Download your flashcards directly to CSV for Anki, or export summaries to Markdown."
+      desc: "Download your flashcards and summaries instantly as mobile-friendly plain text files."
     }
   ];
 

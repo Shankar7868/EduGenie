@@ -83,23 +83,26 @@ export default function ChatMessage({ role, content }) {
 
   const handleExport = () => {
     if (flashcards.length > 0) {
-      // Export as CSV
-      const csvContent = "Front,Back\n" + flashcards.map(card => `"${card.question.replace(/"/g, '""')}","${card.answer.replace(/"/g, '""')}"`).join("\n");
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      // Export as a readable Text File for mobile users
+      const textContent = flashcards.map((card, index) => 
+        `Card ${index + 1}:\nQ: ${card.question}\nA: ${card.answer}\n------------------------\n`
+      ).join("\n");
+      
+      const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'flashcards.csv');
+      link.setAttribute('download', 'flashcards.txt');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } else {
-      // Export as Markdown
-      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
+      // Export as Text
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'study_notes.md');
+      link.setAttribute('download', 'study_notes.txt');
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
