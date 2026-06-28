@@ -1,182 +1,59 @@
-:root {
-  /* Color Palette - Premium Violet & Slate Indigo */
-  --bg-primary: #0a0b10;
-  --bg-secondary: #12141c;
-  --bg-tertiary: #1b1e2a;
-  --bg-glass: rgba(18, 20, 28, 0.7);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(99, 102, 241, 0.4);
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
 
-  --accent-primary: #6366f1; /* Indigo */
-  --accent-primary-hover: #4f46e5;
-  --accent-secondary: #10b981; /* Emerald */
-  --accent-secondary-hover: #059669;
-  
-  --accent-glow: rgba(99, 102, 241, 0.15);
-  --accent-glow-green: rgba(16, 185, 129, 0.15);
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
-
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-
-  font-size: 16px;
-  line-height: 1.5;
-  color-scheme: dark;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
 }
 
-/* Light Theme */
-[data-theme="light"] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #f1f5f9;
-  --bg-glass: rgba(255, 255, 255, 0.75);
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-focus: rgba(99, 102, 241, 0.5);
-
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #94a3b8;
-
-  --accent-primary: #4f46e5;
-  --accent-primary-hover: #4338ca;
-  --accent-secondary: #059669;
-  --accent-secondary-hover: #047857;
-
-  --accent-glow: rgba(79, 70, 229, 0.1);
-  --accent-glow-green: rgba(5, 150, 105, 0.1);
-  
-  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.12);
-}
-
-/* Ocean Theme (Midnight Blue) */
-[data-theme="ocean"] {
-  --bg-primary: #081229;
-  --bg-secondary: #0e1934;
-  --bg-tertiary: #162445;
-  --bg-glass: rgba(14, 25, 52, 0.7);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(14, 165, 233, 0.4);
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-
-  --accent-primary: #0ea5e9; /* Sky Blue */
-  --accent-primary-hover: #0284c7;
-  --accent-secondary: #2dd4bf; /* Teal */
-  --accent-secondary-hover: #14b8a6;
-
-  --accent-glow: rgba(14, 165, 233, 0.15);
-  --accent-glow-green: rgba(45, 212, 191, 0.15);
-  
-  --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.2);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  max-width: 100%;
-}
-
-/* Typography styles */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-}
-
-a {
-  color: var(--accent-primary);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--accent-primary-hover);
-}
-
-/* Scrollbar customization */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.1); }
-  50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.3); }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-fade-scale {
-  animation: fadeScale 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Glassmorphism style helper */
-.glass-panel {
-  background: var(--bg-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-color);
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

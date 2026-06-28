@@ -3,13 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import ChatInput from "../components/ChatInput";
 import ChatMessage from "../components/ChatMessage";
 import ThemeSelector from "../components/ThemeSelector";
-import {
-  SparklesIcon,
-  HomeIcon,
-  MenuIcon,
-  CloseIcon,
-} from "../components/Icons";
-import "./ChatPage.css";
+import { SparklesIcon, HomeIcon, MenuIcon, CloseIcon } from "../components/Icons";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 export default function ChatPage() {
   const { mode } = useParams();
@@ -18,7 +15,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [loadingStep, setLoadingStep] = useState(0); // 0: None, 1: Upload, 2: Analyze, 3: Generate
+  const [loadingStep, setLoadingStep] = useState(0); 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [messages, setMessages] = useState([
@@ -28,12 +25,9 @@ export default function ChatPage() {
     },
   ]);
 
-  
   const messagesEndRef = useRef(null);
 
-  // Handle routing / mode changes
   useEffect(() => {
-    // When switching mode, reset active chat
     setMessages([
       {
         role: "assistant",
@@ -55,16 +49,12 @@ export default function ChatPage() {
     scrollToBottom();
   }, [messages, loading]);
 
-  // Step-by-step loading messages
   useEffect(() => {
     let interval;
     if (loading) {
       setLoadingStep(1);
       interval = setInterval(() => {
-        setLoadingStep((prev) => {
-          if (prev < 3) return prev + 1;
-          return prev;
-        });
+        setLoadingStep((prev) => (prev < 3 ? prev + 1 : prev));
       }, 2500);
     } else {
       setLoadingStep(0);
@@ -87,7 +77,6 @@ export default function ChatPage() {
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
 
-    // Clear inputs immediately
     setInput("");
     setFile(null);
 
@@ -98,11 +87,8 @@ export default function ChatPage() {
       formData.append("topic", currentInput);
       formData.append("mode", mode);
 
-      if (currentFile) {
-        formData.append("file", currentFile);
-      }
+      if (currentFile) formData.append("file", currentFile);
 
-      // Read from env configuration
       const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
       
       const response = await fetch(webhookUrl, {
@@ -125,7 +111,6 @@ export default function ChatPage() {
         result = text;
       }
 
-      // Extract actual content string
       let aiResponseText = "";
       if (typeof result === "string") {
         aiResponseText = result;
@@ -141,8 +126,7 @@ export default function ChatPage() {
         timestamp: Date.now(),
       };
 
-      const updatedMessages = [...newMessages, aiMessage];
-      setMessages(updatedMessages);
+      setMessages([...newMessages, aiMessage]);
 
     } catch (err) {
       console.error(err);
@@ -159,90 +143,116 @@ export default function ChatPage() {
     }
   };
 
-
-
   const getModeLabel = () => {
     switch (mode) {
-      case "qna":
-        return "Q&A Generation";
-      case "summary":
-        return "Summary Creator";
-      case "keypoints":
-        return "Key Points Extractor";
-      case "flashcard":
-        return "Flashcards Generator";
-      case "quiz":
-        return "Interactive Quiz";
-      default:
-        return mode.toUpperCase();
+      case "qna": return "Q&A Generation";
+      case "summary": return "Summary Creator";
+      case "keypoints": return "Key Points Extractor";
+      case "flashcard": return "Flashcards Generator";
+      case "quiz": return "Interactive Quiz";
+      default: return mode.toUpperCase();
     }
   };
 
   const getLoadingStepLabel = () => {
     switch (loadingStep) {
-      case 1:
-        return "Reading study notes & attachments...";
-      case 2:
-        return "Analyzing topics & structuring revision plan...";
-      case 3:
-        return "Synthesizing comprehensive results...";
-      default:
-        return "EduGenie is thinking...";
+      case 1: return "Reading study notes & attachments...";
+      case 2: return "Analyzing topics & structuring revision plan...";
+      case 3: return "Synthesizing comprehensive results...";
+      default: return "EduGenie is thinking...";
     }
   };
 
   return (
-    <div className="chat-page-layout">
-      {/* Sidebar Panel */}
-      <aside className={`chat-sidebar glass-panel ${sidebarOpen ? "open" : "closed"}`}>
-        <div className="sidebar-header">
-          <div className="logo-wrapper" onClick={() => navigate("/")} style={{ cursor: 'pointer' }}>
-            <div className="logo-icon-small">
+    <div className="flex h-screen w-full bg-background overflow-hidden relative">
+      
+      {/* Overlay for mobile sidebar */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden animate-in fade-in"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside 
+        className={cn(
+          "fixed md:relative flex flex-col w-[280px] h-full bg-secondary/50 backdrop-blur-xl border-r border-border/50 z-50 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        )}
+      >
+        <div className="flex items-center justify-between p-6 h-20 border-b border-border/50">
+          <div 
+            className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80" 
+            onClick={() => navigate("/")}
+          >
+            <div className="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center shadow-sm">
               <SparklesIcon size={16} />
             </div>
-            <span className="logo-text-small">EduGenie</span>
+            <span className="font-bold text-lg text-foreground tracking-tight">EduGenie</span>
           </div>
-          <button className="sidebar-toggle-btn" onClick={() => setSidebarOpen(false)}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="md:hidden text-muted-foreground"
+            onClick={() => setSidebarOpen(false)}
+          >
             <CloseIcon size={18} />
-          </button>
+          </Button>
         </div>
 
+        <div className="flex-1 overflow-hidden">{/* Reserved for history or tools */}</div>
 
-
-        <div className="sidebar-footer">
-          <button className="back-home-btn" onClick={() => navigate("/")}>
-            <HomeIcon size={16} />
-            <span>Go to Dashboard</span>
-          </button>
+        <div className="p-4 border-t border-border/50">
+          <Button 
+            variant="secondary" 
+            className="w-full justify-start gap-3 bg-background/50 hover:bg-background border border-border/50 shadow-sm"
+            onClick={() => navigate("/")}
+          >
+            <HomeIcon size={16} className="text-indigo-500" />
+            Go to Dashboard
+          </Button>
         </div>
       </aside>
 
-      {/* Main Workspace Area */}
-      <main className="chat-main-workspace">
-        <header className="workspace-header glass-panel">
-          <div className="workspace-header-left">
-            {!sidebarOpen && (
-              <button className="workspace-menu-btn animate-fade-in" onClick={() => setSidebarOpen(true)}>
-                <MenuIcon size={20} />
-              </button>
-            )}
-            <div className="workspace-title-info">
-              <h2>{getModeLabel()}</h2>
-              <div className="status-indicator">
-                <span className={`status-dot ${loading ? "loading" : ""}`}></span>
-                <span className="status-text">
-                  {loading ? getLoadingStepLabel() : `Ready to study · ${messages.filter(m => m.role === "user").length} message${messages.filter(m => m.role === "user").length !== 1 ? "s" : ""} in session`}
+      {/* Main Workspace */}
+      <main className="flex-1 flex flex-col min-w-0 h-full relative z-10">
+        
+        {/* Workspace Header */}
+        <header className="flex items-center justify-between h-20 px-6 border-b border-border/40 bg-background/80 backdrop-blur-md sticky top-0 z-20">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="md:hidden text-muted-foreground"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <MenuIcon size={20} />
+            </Button>
+            <div className="flex flex-col">
+              <h2 className="text-lg font-bold text-foreground tracking-tight">{getModeLabel()}</h2>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className={cn(
+                  "w-2 h-2 rounded-full",
+                  loading ? "bg-amber-500 animate-pulse" : "bg-emerald-500"
+                )} />
+                <span className="text-xs font-medium text-muted-foreground">
+                  {loading 
+                    ? getLoadingStepLabel() 
+                    : `Ready · ${messages.filter(m => m.role === "user").length} message(s)`
+                  }
                 </span>
               </div>
             </div>
           </div>
-          <div className="workspace-header-right">
+          <div className="flex items-center gap-2">
             <ThemeSelector />
           </div>
         </header>
 
-        <section className="messages-feed">
-          <div className="messages-feed-content">
+        {/* Chat Feed */}
+        <ScrollArea className="flex-1 px-4 md:px-8 py-6">
+          <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-10">
             {messages.map((message, index) => (
               <ChatMessage
                 key={index}
@@ -252,25 +262,26 @@ export default function ChatPage() {
             ))}
 
             {loading && (
-              <div className="skeleton-loader-container">
-                <div className="skeleton-header">
-                  <div className="spinner-small spinner-accent" />
-                  <span className="skeleton-step-text">{getLoadingStepLabel()}</span>
+              <div className="flex flex-col gap-3 animate-in fade-in duration-500">
+                <div className="flex items-center gap-3 ml-2">
+                  <div className="w-4 h-4 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+                  <span className="text-sm font-medium text-indigo-500 animate-pulse">{getLoadingStepLabel()}</span>
                 </div>
-                <div className="skeleton-card glass-panel">
-                  <div className="skeleton-line line-long"></div>
-                  <div className="skeleton-line line-medium"></div>
-                  <div className="skeleton-line line-short"></div>
+                <div className="p-6 rounded-2xl bg-secondary/30 backdrop-blur-sm border border-border/50 max-w-2xl w-full flex flex-col gap-4">
+                  <div className="h-4 bg-muted/50 rounded-md w-3/4 animate-pulse" />
+                  <div className="h-4 bg-muted/50 rounded-md w-1/2 animate-pulse" />
+                  <div className="h-4 bg-muted/50 rounded-md w-5/6 animate-pulse" />
                 </div>
               </div>
             )}
-
+            
             <div ref={messagesEndRef} />
           </div>
-        </section>
+        </ScrollArea>
 
-        <footer className="workspace-input-section">
-          <div className="workspace-input-container">
+        {/* Input Area */}
+        <div className="p-4 md:p-6 bg-gradient-to-t from-background via-background to-transparent sticky bottom-0 z-20">
+          <div className="max-w-4xl mx-auto w-full">
             <ChatInput
               input={input}
               setInput={setInput}
@@ -281,7 +292,7 @@ export default function ChatPage() {
               placeholder={`Enter topic or paste notes to generate your ${getModeLabel()}...`}
             />
           </div>
-        </footer>
+        </div>
       </main>
     </div>
   );
