@@ -1,17 +1,16 @@
-import { QnaIcon, SummaryIcon, KeyPointsIcon } from "./Icons";
+import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon } from "./Icons";
 import "./ModeCard.css";
 
 export default function ModeCard({ title, description, onClick }) {
   const getIcon = () => {
-    switch (title) {
-      case "Q&A Generation":
-        return <QnaIcon size={36} className="mode-icon qna" />;
-      case "Summary":
-        return <SummaryIcon size={36} className="mode-icon summary" />;
-      case "Key Points":
-        return <KeyPointsIcon size={36} className="mode-icon keypoints" />;
-      default:
-        return null;
+    if (title.toLowerCase().includes("q&a")) {
+      return <QnaIcon size={36} className="mode-icon qna" />;
+    } else if (title.toLowerCase().includes("summary")) {
+      return <SummaryIcon size={36} className="mode-icon summary" />;
+    } else if (title.toLowerCase().includes("flashcard")) {
+      return <FlashcardIcon size={36} className="mode-icon flashcard" />;
+    } else {
+      return <KeyPointsIcon size={36} className="mode-icon keypoints" />;
     }
   };
 

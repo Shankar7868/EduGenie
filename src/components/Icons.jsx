@@ -45,6 +45,13 @@ export const KeyPointsIcon = (props) => (
   </IconWrapper>
 );
 
+export const FlashcardIcon = (props) => (
+  <IconWrapper {...props}>
+    <rect x="3" y="4" width="18" height="16" rx="2" ry="2" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </IconWrapper>
+);
+
 export const SendIcon = (props) => (
   <IconWrapper {...props}>
     <line x1="22" y1="2" x2="11" y2="13" />

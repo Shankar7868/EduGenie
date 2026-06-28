@@ -153,11 +153,15 @@
 }
 
 .mode-nav-item.active .mode-item-icon.summary {
-  color: var(--accent-secondary);
+  color: #10b981;
 }
 
 .mode-nav-item.active .mode-item-icon.keypoints {
-  color: #a855f7;
+  color: #f59e0b;
+}
+
+.mode-nav-item.active .mode-item-icon.flashcard {
+  color: #ec4899;
 }
 
 /* History lists */

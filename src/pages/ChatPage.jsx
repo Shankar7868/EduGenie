@@ -11,7 +11,8 @@ import {
   TrashIcon,
   MenuIcon,
   CloseIcon,
-  HistoryIcon
+  HistoryIcon,
+  FlashcardIcon
 } from "../components/Icons";
 import "./ChatPage.css";
 
@@ -26,11 +27,9 @@ export default function ChatPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sessionId, setSessionId] = useState(null);
   
-  // Load sessions history from localStorage
-  const [sessions, setSessions] = useState(() => {
-    const saved = localStorage.getItem("edugenie_sessions");
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Keep sessions history strictly in-memory so it disappears on refresh (per user request)
+  // We maintain all sessions across mode switching, but filter them in the UI per mode.
+  const [sessions, setSessions] = useState([]);
 
   const [messages, setMessages] = useState([
     {
@@ -41,11 +40,6 @@ export default function ChatPage() {
 
   
   const messagesEndRef = useRef(null);
-
-  // Sync sessions history to localStorage
-  useEffect(() => {
-    localStorage.setItem("edugenie_sessions", JSON.stringify(sessions));
-  }, [sessions]);
 
   // Handle routing / mode changes
   useEffect(() => {
@@ -263,6 +257,8 @@ export default function ChatPage() {
         return "Summary Creator";
       case "keypoints":
         return "Key Points Extractor";
+      case "flashcard":
+        return "Flashcards Generator";
       default:
         return mode.toUpperCase();
     }
@@ -325,6 +321,13 @@ export default function ChatPage() {
               <KeyPointsIcon size={18} className="mode-item-icon keypoints" />
               <span>Key Points</span>
             </button>
+            <button
+              className={`mode-nav-item ${mode === "flashcard" ? "active" : ""}`}
+              onClick={() => navigate("/chat/flashcard")}
+            >
+              <FlashcardIcon size={18} className="mode-item-icon flashcard" />
+              <span>Flashcards</span>
+            </button>
           </nav>
         </div>
 
@@ -339,13 +342,13 @@ export default function ChatPage() {
           </div>
 
           <div className="history-list">
-            {sessions.length === 0 ? (
+            {sessions.filter(s => s.mode === mode).length === 0 ? (
               <div className="history-empty">
                 <HistoryIcon size={24} className="history-empty-icon" />
-                <span>No previous sessions</span>
+                <span>No previous sessions for this mode</span>
               </div>
             ) : (
-              sessions.map((s) => (
+              sessions.filter(s => s.mode === mode).map((s) => (
                 <div
                   key={s.id}
                   className={`history-item ${sessionId === s.id ? "active" : ""}`}

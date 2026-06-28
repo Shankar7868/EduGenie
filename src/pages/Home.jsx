@@ -22,6 +22,11 @@ export default function Home() {
       description: "Extract important concepts and highlights from documents.",
       route: "/chat/keypoints",
     },
+    {
+      title: "Flashcards",
+      description: "Automatically convert study material into beautiful Anki-style cards.",
+      route: "/chat/flashcard",
+    },
   ];
 
   const features = [

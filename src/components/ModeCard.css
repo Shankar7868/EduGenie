@@ -76,11 +76,18 @@
 }
 
 .mode-card:hover .mode-icon.summary {
-  color: var(--accent-secondary);
+  color: #10b981; /* emerald */
+  filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.4));
 }
 
 .mode-card:hover .mode-icon.keypoints {
-  color: #a855f7; /* Purple */
+  color: #f59e0b; /* amber */
+  filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.4));
+}
+
+.mode-card:hover .mode-icon.flashcard {
+  color: #ec4899; /* pink */
+  filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.4));
 }
 
 .mode-card-arrow {
