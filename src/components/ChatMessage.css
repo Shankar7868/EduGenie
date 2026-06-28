@@ -342,7 +342,8 @@
   box-shadow: var(--shadow-sm);
 }
 
-.flashcard.flipped .flashcard-inner {
+.flashcard.flipped .flashcard-inner,
+.flashcard-large.flipped .flashcard-inner {
   transform: rotateY(180deg);
 }
 
