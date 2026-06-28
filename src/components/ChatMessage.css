@@ -252,19 +252,83 @@
   font-weight: 600;
 }
 
-/* Flashcard Styles */
-.flashcards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  padding: 8px 0;
+/* Flashcard Carousel Styles */
+.flashcards-carousel-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
+  gap: 16px;
+  padding: 12px 0;
 }
 
-.flashcard {
-  height: 180px;
-  perspective: 1000px;
+.flashcards-carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+.carousel-btn {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.carousel-btn:hover:not(:disabled) {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-counter {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 60px;
+  text-align: center;
+}
+
+.flashcards-carousel-view {
+  width: 100%;
+  max-width: 700px; /* Take up more space */
+  display: flex;
+  justify-content: center;
+}
+
+.flashcard-large {
+  width: 100%;
+  min-height: 320px;
+  perspective: 1200px;
+  cursor: pointer;
+}
+
+.large-text {
+  font-size: 1.25rem !important;
+  line-height: 1.6;
+}
+
+.card-content.large-text {
+  -webkit-line-clamp: 6; /* allow more lines for large card */
+}
+
+.card-content-scroll.large-text {
+  max-height: 200px; /* taller scrollable area */
 }
 
 .flashcard-inner {

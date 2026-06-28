@@ -122,6 +122,13 @@ export const ArrowLeftIcon = (props) => (
   </IconWrapper>
 );
 
+export const ArrowRightIcon = (props) => (
+  <IconWrapper {...props}>
+    <line x1="5" y1="12" x2="19" y2="12" />
+    <polyline points="12 5 19 12 12 19" />
+  </IconWrapper>
+);
+
 export const HomeIcon = (props) => (
   <IconWrapper {...props}>
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />

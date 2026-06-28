@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { CopyIcon, CheckIcon, VolumeIcon, VolumeMuteIcon, SparklesIcon, FileIcon } from "./Icons";
+import { CopyIcon, CheckIcon, VolumeIcon, VolumeMuteIcon, SparklesIcon, FileIcon, ArrowLeftIcon, ArrowRightIcon } from "./Icons";
 import "./ChatMessage.css";
 
 export default function ChatMessage({ role, content }) {
@@ -9,6 +9,7 @@ export default function ChatMessage({ role, content }) {
   const [activeTab, setActiveTab] = useState("chat"); // "chat" or "flashcards"
   const [flashcards, setFlashcards] = useState([]);
   const [flippedCards, setFlippedCards] = useState({});
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   // Parse flashcards if the message is from assistant and contains Q&A
   useEffect(() => {
@@ -81,6 +82,33 @@ export default function ChatMessage({ role, content }) {
     }));
   };
 
+  const nextCard = () => {
+    if (currentCardIndex < flashcards.length - 1) {
+      setCurrentCardIndex(prev => prev + 1);
+    }
+  };
+
+  const prevCard = () => {
+    if (currentCardIndex > 0) {
+      setCurrentCardIndex(prev => prev - 1);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab !== "flashcards" || flashcards.length === 0) return;
+    
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        nextCard();
+      } else if (e.key === "ArrowLeft") {
+        prevCard();
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeTab, flashcards.length, currentCardIndex]);
+
   const isUser = role === "user";
 
   return (
@@ -133,29 +161,49 @@ export default function ChatMessage({ role, content }) {
 
       <div className={`message-bubble ${isUser ? "user-message" : "assistant-message"}`}>
         {activeTab === "flashcards" && flashcards.length > 0 ? (
-          <div className="flashcards-grid">
-            {flashcards.map((card, idx) => (
+          <div className="flashcards-carousel-container">
+            <div className="flashcards-carousel-controls">
+              <button 
+                className="carousel-btn" 
+                onClick={prevCard} 
+                disabled={currentCardIndex === 0}
+                title="Previous Card"
+              >
+                <ArrowLeftIcon size={20} />
+              </button>
+              <span className="carousel-counter">
+                {currentCardIndex + 1} / {flashcards.length}
+              </span>
+              <button 
+                className="carousel-btn" 
+                onClick={nextCard} 
+                disabled={currentCardIndex === flashcards.length - 1}
+                title="Next Card"
+              >
+                <ArrowRightIcon size={20} />
+              </button>
+            </div>
+            <div className="flashcards-carousel-view">
               <div
-                key={idx}
-                className={`flashcard ${flippedCards[idx] ? "flipped" : ""}`}
-                onClick={() => toggleCard(idx)}
+                className={`flashcard-large ${flippedCards[currentCardIndex] ? "flipped" : ""}`}
+                onClick={() => toggleCard(currentCardIndex)}
               >
                 <div className="flashcard-inner">
                   <div className="flashcard-front">
-                    <div className="card-badge">Question {idx + 1}</div>
-                    <div className="card-content">{card.question}</div>
-                    <div className="card-hint">Click to reveal answer</div>
+                    <div className="card-badge">Card {currentCardIndex + 1} (Question)</div>
+                    <div className="card-content large-text">{flashcards[currentCardIndex].question}</div>
+                    <div className="card-hint">Click to flip</div>
                   </div>
                   <div className="flashcard-back">
                     <div className="card-badge">Answer</div>
-                    <div className="card-content-scroll">
-                      <ReactMarkdown>{card.answer}</ReactMarkdown>
+                    <div className="card-content-scroll large-text">
+                      <ReactMarkdown>{flashcards[currentCardIndex].answer}</ReactMarkdown>
                     </div>
-                    <div className="card-hint">Click to see question</div>
+                    <div className="card-hint">Click to flip</div>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         ) : (
           <div className="markdown-content">
