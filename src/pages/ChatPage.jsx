@@ -297,39 +297,7 @@ export default function ChatPage() {
           + New Study Session
         </button>
 
-        <div className="sidebar-section">
-          <span className="sidebar-section-title">Study Modes</span>
-          <nav className="mode-nav">
-            <button
-              className={`mode-nav-item ${mode === "qna" ? "active" : ""}`}
-              onClick={() => navigate("/chat/qna")}
-            >
-              <QnaIcon size={18} className="mode-item-icon qna" />
-              <span>Q&A Generation</span>
-            </button>
-            <button
-              className={`mode-nav-item ${mode === "summary" ? "active" : ""}`}
-              onClick={() => navigate("/chat/summary")}
-            >
-              <SummaryIcon size={18} className="mode-item-icon summary" />
-              <span>Summary</span>
-            </button>
-            <button
-              className={`mode-nav-item ${mode === "keypoints" ? "active" : ""}`}
-              onClick={() => navigate("/chat/keypoints")}
-            >
-              <KeyPointsIcon size={18} className="mode-item-icon keypoints" />
-              <span>Key Points</span>
-            </button>
-            <button
-              className={`mode-nav-item ${mode === "flashcard" ? "active" : ""}`}
-              onClick={() => navigate("/chat/flashcard")}
-            >
-              <FlashcardIcon size={18} className="mode-item-icon flashcard" />
-              <span>Flashcards</span>
-            </button>
-          </nav>
-        </div>
+
 
         <div className="sidebar-history-section">
           <div className="sidebar-section-title-wrapper">
