@@ -714,6 +714,9 @@
   .keypoints-section.hero {
     grid-column: span 2;
   }
+  .keypoints-section:nth-child(even):last-child {
+    grid-column: span 2;
+  }
 }
 .keypoints-section {
   border-radius: 12px;
