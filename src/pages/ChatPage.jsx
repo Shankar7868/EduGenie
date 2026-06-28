@@ -114,6 +114,13 @@ export default function ChatPage() {
       const formData = new FormData();
       formData.append("topic", currentInput);
       formData.append("mode", mode);
+
+      // Send full conversation history so the AI can maintain context
+      const conversationHistory = messages
+        .filter((m) => m.role !== "system") // exclude any system prompts
+        .map((m) => ({ role: m.role, content: m.content }));
+      formData.append("history", JSON.stringify(conversationHistory));
+
       if (currentFile) {
         formData.append("file", currentFile);
       }
@@ -381,8 +388,10 @@ export default function ChatPage() {
             <div className="workspace-title-info">
               <h2>{getModeLabel()}</h2>
               <div className="status-indicator">
-                <span className="status-dot"></span>
-                <span className="status-text">Ready to study</span>
+                <span className={`status-dot ${loading ? "loading" : ""}`}></span>
+                <span className="status-text">
+                  {loading ? getLoadingStepLabel() : `Ready to study · ${messages.filter(m => m.role === "user").length} message${messages.filter(m => m.role === "user").length !== 1 ? "s" : ""} in session`}
+                </span>
               </div>
             </div>
           </div>
