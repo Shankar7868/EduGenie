@@ -5,20 +5,11 @@ export default function ThemeSelector() {
   const [theme, setTheme] = useTheme();
 
   return (
-    <div className="theme-selector" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+    <div className="flex items-center gap-2">
       <select 
         value={theme} 
         onChange={(e) => setTheme(e.target.value)}
-        style={{
-          background: 'var(--bg-tertiary)',
-          color: 'var(--text-primary)',
-          border: '1px solid var(--border-color)',
-          padding: '6px 12px',
-          borderRadius: '8px',
-          fontSize: '0.85rem',
-          outline: 'none',
-          cursor: 'pointer'
-        }}
+        className="bg-secondary text-foreground border border-border px-3 py-1.5 rounded-lg text-sm font-medium outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-colors shadow-sm"
       >
         <option value="dark">Dark Theme</option>
         <option value="light">Light Theme</option>

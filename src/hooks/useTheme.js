@@ -6,7 +6,11 @@ export function useTheme() {
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
+    const root = document.documentElement;
+    root.classList.remove("light", "dark", "ocean");
+    if (theme !== "light") {
+      root.classList.add(theme);
+    }
     localStorage.setItem("theme", theme);
   }, [theme]);
 
