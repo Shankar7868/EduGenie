@@ -583,3 +583,185 @@
   padding: 0.75rem;
   border-radius: 6px;
 }
+
+/* =========================================
+   PREMIUM CUSTOM MODES (Q&A, SUMMARY, KEYPOINTS)
+   ========================================= */
+.mode-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+/* Q&A Mode */
+.qna-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.qna-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.qna-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.qna-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+.qna-q-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(99, 102, 241, 0.05);
+  border-bottom: 1px solid var(--border-color);
+}
+.qna-badge {
+  background: var(--accent-primary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.qna-question {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.qna-question p {
+  margin: 0;
+}
+.qna-a-body {
+  padding: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.qna-a-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* Summary Mode */
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.summary-section {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.02);
+}
+.summary-section.overview {
+  background: rgba(99, 102, 241, 0.05);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+.summary-section.accent {
+  background: rgba(236, 72, 153, 0.05);
+  border-left: 4px solid var(--accent-secondary);
+}
+.summary-section-header {
+  font-weight: 700;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+.summary-section.overview .summary-section-header {
+  color: var(--accent-primary);
+}
+.summary-section.accent .summary-section-header {
+  color: var(--accent-secondary);
+}
+.summary-section-content {
+  padding: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.summary-section-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Keypoints Mode */
+.keypoints-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.keypoints-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 768px) {
+  .keypoints-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .keypoints-section.hero {
+    grid-column: span 2;
+  }
+}
+.keypoints-section {
+  border-radius: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  height: 100%;
+}
+.keypoints-section.hero {
+  background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(236,72,153,0.1));
+  border-color: rgba(99, 102, 241, 0.3);
+  text-align: center;
+}
+.keypoints-section.hero .keypoints-section-header {
+  font-size: 1.2rem;
+  color: var(--accent-primary);
+  margin-bottom: 12px;
+  justify-content: center;
+}
+.keypoints-section.warning {
+  background: rgba(245, 158, 11, 0.05);
+  border-left: 4px solid #f59e0b;
+}
+.keypoints-section.warning .keypoints-section-header {
+  color: #f59e0b;
+}
+.keypoints-section-header {
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.keypoints-section-content {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.keypoints-section-content ul {
+  padding-left: 20px;
+}
+.keypoints-section-content li {
+  margin-bottom: 8px;
+}
+.keypoints-section.hero .keypoints-section-content {
+  font-size: 1.1rem;
+}
+.keypoints-section-content p:last-child {
+  margin-bottom: 0;
+}
+

@@ -17,21 +17,117 @@ export default function ChatMessage({ role, content }) {
   const [quizFinished, setQuizFinished] = useState(false);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
 
-  // Parse flashcards or quiz if the message is from assistant
+  // Q&A State
+  const [qnaData, setQnaData] = useState(null);
+
+  // Summary State
+  const [summaryData, setSummaryData] = useState(null);
+
+  // Keypoints State
+  const [keypointsData, setKeypointsData] = useState(null);
+
+  // Parse custom modes if the message is from assistant
   useEffect(() => {
     if (role === "assistant" && content) {
-      // First try to parse as JSON for Quiz Mode
+      // 1. First try to parse as JSON for Quiz Mode
       try {
         const cleanContent = content.trim().replace(/^```(?:json)?|```$/gi, '').trim();
         const parsed = JSON.parse(cleanContent);
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].question && parsed[0].options) {
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].question) {
           setQuizData(parsed);
           return;
         }
       } catch (e) {
-        // Not a JSON quiz, fall back to flashcard parsing
+        // Not a JSON quiz
       }
 
+      // 2. Check for Summary Mode
+      if (content.includes("## 📌 Overview") || content.includes("## 🔑 Key Concepts")) {
+        const sections = {};
+        const lines = content.split('\n');
+        let currentSection = null;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith("## ")) {
+            currentSection = line.replace("## ", "").trim();
+            sections[currentSection] = [];
+          } else if (currentSection && line) {
+            sections[currentSection].push(line);
+          }
+        }
+        for (const key in sections) {
+          sections[key] = sections[key].join('\n');
+        }
+        if (Object.keys(sections).length > 0) {
+          setSummaryData(sections);
+          return;
+        }
+      }
+
+      // 3. Check for Keypoints Mode
+      if (content.includes("## 📚 Core Definition") || content.includes("## ⚡ Key Points")) {
+        const sections = {};
+        const lines = content.split('\n');
+        let currentSection = null;
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (line.startsWith("## ")) {
+            currentSection = line.replace("## ", "").trim();
+            sections[currentSection] = [];
+          } else if (currentSection && line) {
+            sections[currentSection].push(line);
+          }
+        }
+        for (const key in sections) {
+          sections[key] = sections[key].join('\n');
+        }
+        if (Object.keys(sections).length > 0) {
+          setKeypointsData(sections);
+          return;
+        }
+      }
+
+      // 4. Check for QnA Mode
+      if (content.match(/\*\*Q1/i) || content.match(/\*\*Q1\s*\[/i)) {
+        const items = [];
+        const lines = content.split('\n');
+        let currentQ = "";
+        let currentA = "";
+        let inA = false;
+        
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+          if (!line) continue;
+          
+          const qMatch = line.match(/^\*\*(Q\d+.*?)\*\*\s*(.*)/i) || line.match(/^(Q\d+.*?):\s*(.*)/i);
+          const aMatch = line.match(/^\*\*(A\d+.*?)\*\*\s*(.*)/i) || line.match(/^(A\d+.*?):\s*(.*)/i);
+          
+          if (qMatch) {
+            if (currentQ && currentA) {
+              items.push({ question: currentQ, answer: currentA.trim() });
+            }
+            currentQ = qMatch[1] + ": " + qMatch[2];
+            currentA = "";
+            inA = false;
+          } else if (aMatch) {
+            currentA = aMatch[2];
+            inA = true;
+          } else if (inA) {
+            currentA += "\n" + line;
+          } else if (currentQ) {
+            currentQ += " " + line;
+          }
+        }
+        if (currentQ && currentA) {
+          items.push({ question: currentQ, answer: currentA.trim() });
+        }
+        if (items.length > 0) {
+          setQnaData(items);
+          return;
+        }
+      }
+
+      // 5. Check for Flashcard Mode
       const lines = content.split('\n');
       const items = [];
       let currentQ = "";
@@ -42,7 +138,6 @@ export default function ChatMessage({ role, content }) {
         const line = lines[i].trim();
         if (!line) continue;
         
-        // Check for Question/Front
         const qMatch = line.match(/^(?:\*\*)?(?:Question|Q|Front)(?:\*\*)?\s*[:.-]?\s*(?:\*\*)?(.*?)(?:\*\*)?$/i);
         if (qMatch) {
           if (currentQ && currentA) {
@@ -54,7 +149,6 @@ export default function ChatMessage({ role, content }) {
           continue;
         }
 
-        // Check for Answer/Back
         const aMatch = line.match(/^(?:\*\*)?(?:Answer|A|Back)(?:\*\*)?\s*[:.-]?\s*(?:\*\*)?(.*?)(?:\*\*)?$/i);
         if (aMatch) {
           currentA = aMatch[1].trim();
@@ -62,21 +156,12 @@ export default function ChatMessage({ role, content }) {
           continue;
         }
 
-        // Check for Card X header (ignore)
-        if (line.match(/^🃏?\s*(?:\*\*)?Card\s+\d+(?:\*\*)?/i)) {
-          continue;
-        }
-        
-        // Horizontal rule
-        if (line.match(/^---+$/)) {
-            continue;
-        }
+        if (line.match(/^🃏?\s*(?:\*\*)?Card\s+\d+(?:\*\*)?/i)) continue;
+        if (line.match(/^---+$/)) continue;
 
-        // Append to Answer if in Answer section
         if (inA) {
           currentA += "\n" + line;
         } else if (currentQ && !inA) {
-          // maybe multi-line question
           currentQ += " " + line;
         }
       }
@@ -85,7 +170,9 @@ export default function ChatMessage({ role, content }) {
         items.push({ question: currentQ, answer: currentA.trim() });
       }
       
-      setFlashcards(items);
+      if (items.length > 0) {
+        setFlashcards(items);
+      }
     }
   }, [role, content]);
 
@@ -100,31 +187,14 @@ export default function ChatMessage({ role, content }) {
   };
 
   const handleExport = () => {
-    if (flashcards.length > 0) {
-      // Export as a readable Text File for mobile users
-      const textContent = flashcards.map((card, index) => 
-        `Card ${index + 1}:\nQ: ${card.question}\nA: ${card.answer}\n------------------------\n`
-      ).join("\n");
-      
-      const blob = new Blob([textContent], { type: 'text/plain;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'flashcards.txt');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      // Export as Text
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'study_notes.txt');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'study_notes.txt');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleQuizOptionSelect = (option) => {
@@ -302,6 +372,49 @@ export default function ChatMessage({ role, content }) {
                 </div>
               </div>
             )}
+          </div>
+        ) : qnaData && qnaData.length > 0 && !isUser ? (
+          <div className="qna-container animate-fade-in">
+            <h3 className="mode-title">Q&A Study Guide</h3>
+            <div className="qna-list">
+              {qnaData.map((item, idx) => (
+                <div key={idx} className="qna-card">
+                  <div className="qna-q-header">
+                    <div className="qna-badge">Q{idx + 1}</div>
+                    <div className="qna-question"><ReactMarkdown components={markdownComponents}>{item.question.replace(/^Q\d+.*?:\s*/i, '')}</ReactMarkdown></div>
+                  </div>
+                  <div className="qna-a-body">
+                    <ReactMarkdown components={markdownComponents}>{item.answer}</ReactMarkdown>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : summaryData && Object.keys(summaryData).length > 0 && !isUser ? (
+          <div className="summary-container animate-fade-in">
+            <h3 className="mode-title">Summary Notes</h3>
+            {Object.keys(summaryData).map((sectionKey, idx) => (
+              <div key={idx} className={`summary-section ${sectionKey.includes('Overview') ? 'overview' : sectionKey.includes('Facts') ? 'accent' : 'standard'}`}>
+                <div className="summary-section-header">{sectionKey.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}]/gu, '')}</div>
+                <div className="summary-section-content">
+                  <ReactMarkdown components={markdownComponents}>{summaryData[sectionKey]}</ReactMarkdown>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : keypointsData && Object.keys(keypointsData).length > 0 && !isUser ? (
+          <div className="keypoints-container animate-fade-in">
+            <h3 className="mode-title">Keypoints</h3>
+            <div className="keypoints-grid">
+              {Object.keys(keypointsData).map((sectionKey, idx) => (
+                <div key={idx} className={`keypoints-section ${sectionKey.includes('Definition') ? 'hero' : sectionKey.includes('Misconceptions') ? 'warning' : 'standard'}`}>
+                  <div className="keypoints-section-header">{sectionKey.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}]/gu, '')}</div>
+                  <div className="keypoints-section-content">
+                    <ReactMarkdown components={markdownComponents}>{keypointsData[sectionKey]}</ReactMarkdown>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : flashcards.length > 0 && !isUser ? (
           <div className="flashcards-carousel-container">
