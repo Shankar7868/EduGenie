@@ -41,10 +41,6 @@ export default function Home() {
     {
       title: "Voice Assistant (TTS)",
       desc: "Listen to summaries and study points on the go with built-in voice playback."
-    },
-    {
-      title: "Smart Local History",
-      desc: "Keep track of your study sessions automatically across visits."
     }
   ];
 

@@ -25,11 +25,6 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0); // 0: None, 1: Upload, 2: Analyze, 3: Generate
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [sessionId, setSessionId] = useState(null);
-  
-  // Keep sessions history strictly in-memory so it disappears on refresh (per user request)
-  // We maintain all sessions across mode switching, but filter them in the UI per mode.
-  const [sessions, setSessions] = useState([]);
 
   const [messages, setMessages] = useState([
     {
@@ -43,8 +38,7 @@ export default function ChatPage() {
 
   // Handle routing / mode changes
   useEffect(() => {
-    // When switching mode, reset active chat unless it's a restored session
-    setSessionId(null);
+    // When switching mode, reset active chat
     setMessages([
       {
         role: "assistant",
@@ -109,12 +103,6 @@ export default function ChatPage() {
       formData.append("topic", currentInput);
       formData.append("mode", mode);
 
-      // Send full conversation history so the AI can maintain context
-      const conversationHistory = messages
-        .filter((m) => m.role !== "system") // exclude any system prompts
-        .map((m) => ({ role: m.role, content: m.content }));
-      formData.append("history", JSON.stringify(conversationHistory));
-
       if (currentFile) {
         formData.append("file", currentFile);
       }
@@ -128,7 +116,10 @@ export default function ChatPage() {
       });
 
       if (!response.ok) {
-        throw new Error(`Server returned status code: ${response.status}`);
+        const errorMsg = response.status === 503 
+          ? "Service Unavailable (503): The backend n8n workflow is currently offline or the webhook tunnel is disconnected. Please ensure your API is active."
+          : `Server returned status code: ${response.status}`;
+        throw new Error(errorMsg);
       }
 
       const text = await response.text();
@@ -158,36 +149,6 @@ export default function ChatPage() {
       const updatedMessages = [...newMessages, aiMessage];
       setMessages(updatedMessages);
 
-      // Create/Update Session History
-      let activeSessionId = sessionId;
-      if (!activeSessionId) {
-        activeSessionId = `session_${Date.now()}`;
-        setSessionId(activeSessionId);
-
-        // Add new session
-        const sessionTitle = currentFile 
-          ? `File: ${currentFile.name.substring(0, 20)}...`
-          : currentInput.substring(0, 25) + (currentInput.length > 25 ? "..." : "");
-
-        const newSession = {
-          id: activeSessionId,
-          title: sessionTitle,
-          mode: mode,
-          messages: updatedMessages,
-          timestamp: Date.now()
-        };
-        setSessions((prev) => [newSession, ...prev]);
-      } else {
-        // Update existing session
-        setSessions((prev) =>
-          prev.map((s) =>
-            s.id === activeSessionId
-              ? { ...s, messages: updatedMessages, timestamp: Date.now() }
-              : s
-          )
-        );
-      }
-
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
@@ -203,51 +164,7 @@ export default function ChatPage() {
     }
   };
 
-  // Restore session from history
-  const handleLoadSession = (session) => {
-    setSessionId(session.id);
-    setMessages(session.messages);
-    navigate(`/chat/${session.mode}`);
-  };
 
-  // Clear single session history
-  const handleDeleteSession = (e, targetId) => {
-    e.stopPropagation();
-    setSessions((prev) => prev.filter((s) => s.id !== targetId));
-    if (sessionId === targetId) {
-      setSessionId(null);
-      setMessages([
-        {
-          role: "assistant",
-          content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Upload a PDF study guide, enter a concept, or paste lecture notes to begin!`,
-        },
-      ]);
-    }
-  };
-
-  // Clear all history
-  const handleClearAllHistory = () => {
-    if (window.confirm("Are you sure you want to clear all studying history?")) {
-      setSessions([]);
-      setSessionId(null);
-      setMessages([
-        {
-          role: "assistant",
-          content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Upload a PDF study guide, enter a concept, or paste lecture notes to begin!`,
-        },
-      ]);
-    }
-  };
-
-  const startNewSession = () => {
-    setSessionId(null);
-    setMessages([
-      {
-        role: "assistant",
-        content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Upload a PDF study guide, enter a concept, or paste lecture notes to begin!`,
-      },
-    ]);
-  };
 
   const getModeLabel = () => {
     switch (mode) {
@@ -293,51 +210,7 @@ export default function ChatPage() {
           </button>
         </div>
 
-        <button className="new-session-btn" onClick={startNewSession}>
-          + New Study Session
-        </button>
 
-
-
-        <div className="sidebar-history-section">
-          <div className="sidebar-section-title-wrapper">
-            <span className="sidebar-section-title">Recent History</span>
-            {sessions.length > 0 && (
-              <button className="clear-all-btn" onClick={handleClearAllHistory} title="Clear history">
-                <TrashIcon size={14} />
-              </button>
-            )}
-          </div>
-
-          <div className="history-list">
-            {sessions.filter(s => s.mode === mode).length === 0 ? (
-              <div className="history-empty">
-                <HistoryIcon size={24} className="history-empty-icon" />
-                <span>No previous sessions for this mode</span>
-              </div>
-            ) : (
-              sessions.filter(s => s.mode === mode).map((s) => (
-                <div
-                  key={s.id}
-                  className={`history-item ${sessionId === s.id ? "active" : ""}`}
-                  onClick={() => handleLoadSession(s)}
-                >
-                  <div className="history-item-content">
-                    <span className="history-item-title">{s.title}</span>
-                    <span className={`history-item-badge ${s.mode}`}>{s.mode.toUpperCase()}</span>
-                  </div>
-                  <button
-                    className="delete-history-btn"
-                    onClick={(e) => handleDeleteSession(e, s.id)}
-                    title="Delete session"
-                  >
-                    <CloseIcon size={12} />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
 
         <div className="sidebar-footer">
           <button className="back-home-btn" onClick={() => navigate("/")}>
