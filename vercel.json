@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/webhook/:path*",
-      "destination": "http://18.61.252.168/webhook/:path*"
+      "source": "/api/webhook/AI_agent",
+      "destination": "http://18.61.252.168/webhook/AI_agent"
     }
   ]
 }
