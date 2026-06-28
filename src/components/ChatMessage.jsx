@@ -14,20 +14,59 @@ export default function ChatMessage({ role, content }) {
   // Parse flashcards if the message is from assistant and contains Q&A
   useEffect(() => {
     if (role === "assistant" && content) {
-      // Regex to parse Question and Answer pairs
-      const qnaRegex = /(?:^|\n)(?:Question|Q)\s*\d*[:.-]?\s*([^\n]+)(?:\n+)(?:Answer|A)\s*[:.-]?\s*([\s\S]*?)(?=(?:\n+(?:Question|Q)\s*\d*[:.-]?\s*)|$)/gi;
+      const lines = content.split('\n');
       const items = [];
-      let match;
-      
-      // Temporary check with a copy of regex
-      const tempRegex = new RegExp(qnaRegex);
-      while ((match = tempRegex.exec(content)) !== null) {
-        const question = match[1].replace(/^\*\*|\*\*$/g, "").trim();
-        const answer = match[2].replace(/^\*\*|\*\*$/g, "").trim();
-        if (question && answer) {
-          items.push({ question, answer });
+      let currentQ = "";
+      let currentA = "";
+      let inA = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        // Check for Question/Front
+        const qMatch = line.match(/^(?:\*\*)?(?:Question|Q|Front)(?:\*\*)?\s*[:.-]?\s*(?:\*\*)?(.*?)(?:\*\*)?$/i);
+        if (qMatch) {
+          if (currentQ && currentA) {
+            items.push({ question: currentQ, answer: currentA.trim() });
+          }
+          currentQ = qMatch[1].trim();
+          currentA = "";
+          inA = false;
+          continue;
+        }
+
+        // Check for Answer/Back
+        const aMatch = line.match(/^(?:\*\*)?(?:Answer|A|Back)(?:\*\*)?\s*[:.-]?\s*(?:\*\*)?(.*?)(?:\*\*)?$/i);
+        if (aMatch) {
+          currentA = aMatch[1].trim();
+          inA = true;
+          continue;
+        }
+
+        // Check for Card X header (ignore)
+        if (line.match(/^🃏?\s*(?:\*\*)?Card\s+\d+(?:\*\*)?/i)) {
+          continue;
+        }
+        
+        // Horizontal rule
+        if (line.match(/^---+$/)) {
+            continue;
+        }
+
+        // Append to Answer if in Answer section
+        if (inA) {
+          currentA += "\n" + line;
+        } else if (currentQ && !inA) {
+          // maybe multi-line question
+          currentQ += " " + line;
         }
       }
+
+      if (currentQ && currentA) {
+        items.push({ question: currentQ, answer: currentA.trim() });
+      }
+      
       setFlashcards(items);
     }
   }, [role, content]);
@@ -191,7 +230,9 @@ export default function ChatMessage({ role, content }) {
                 <div className="flashcard-inner">
                   <div className="flashcard-front">
                     <div className="card-badge">Card {currentCardIndex + 1} (Question)</div>
-                    <div className="card-content large-text">{flashcards[currentCardIndex].question}</div>
+                    <div className="card-content large-text">
+                      <ReactMarkdown>{flashcards[currentCardIndex].question}</ReactMarkdown>
+                    </div>
                     <div className="card-hint">Click to flip</div>
                   </div>
                   <div className="flashcard-back">
