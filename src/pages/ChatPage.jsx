@@ -6,14 +6,8 @@ import ThemeSelector from "../components/ThemeSelector";
 import {
   SparklesIcon,
   HomeIcon,
-  QnaIcon,
-  SummaryIcon,
-  KeyPointsIcon,
-  TrashIcon,
   MenuIcon,
   CloseIcon,
-  HistoryIcon,
-  FlashcardIcon
 } from "../components/Icons";
 import "./ChatPage.css";
 
