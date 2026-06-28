@@ -24,7 +24,7 @@ export default function ChatPage() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0); // 0: None, 1: Upload, 2: Analyze, 3: Generate
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [messages, setMessages] = useState([
     {
