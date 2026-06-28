@@ -278,7 +278,7 @@ export default function ChatMessage({ role, content }) {
                       <ReactMarkdown components={markdownComponents}>{quizData[currentQuizIndex].question}</ReactMarkdown>
                     </div>
                     <div className="quiz-options-list">
-                      {quizData[currentQuizIndex].options.map((opt, idx) => (
+                      {(quizData[currentQuizIndex].options || [quizData[currentQuizIndex].answer || "True", "False"]).map((opt, idx) => (
                         <button 
                           key={idx} 
                           className={`quiz-option-btn ${userAnswers[currentQuizIndex] === opt ? 'selected' : ''}`}
