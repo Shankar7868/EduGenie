@@ -36,30 +36,52 @@
   color: var(--text-primary);
 }
 
-/* Light theme overrides (optional, for systems preferring light mode) */
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-primary: #f8fafc;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #f1f5f9;
-    --bg-glass: rgba(255, 255, 255, 0.75);
-    --border-color: rgba(0, 0, 0, 0.08);
-    --border-focus: rgba(99, 102, 241, 0.5);
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-focus: rgba(99, 102, 241, 0.5);
 
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 
-    --accent-primary: #4f46e5;
-    --accent-primary-hover: #4338ca;
-    --accent-secondary: #059669;
-    --accent-secondary-hover: #047857;
+  --accent-primary: #4f46e5;
+  --accent-primary-hover: #4338ca;
+  --accent-secondary: #059669;
+  --accent-secondary-hover: #047857;
 
-    --accent-glow: rgba(79, 70, 229, 0.1);
-    --accent-glow-green: rgba(5, 150, 105, 0.1);
-    
-    --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.12);
-  }
+  --accent-glow: rgba(79, 70, 229, 0.1);
+  --accent-glow-green: rgba(5, 150, 105, 0.1);
+  
+  --shadow-glow: 0 0 20px rgba(79, 70, 229, 0.12);
+}
+
+/* Ocean Theme (Midnight Blue) */
+[data-theme="ocean"] {
+  --bg-primary: #081229;
+  --bg-secondary: #0e1934;
+  --bg-tertiary: #162445;
+  --bg-glass: rgba(14, 25, 52, 0.7);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(14, 165, 233, 0.4);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --accent-primary: #0ea5e9; /* Sky Blue */
+  --accent-primary-hover: #0284c7;
+  --accent-secondary: #2dd4bf; /* Teal */
+  --accent-secondary-hover: #14b8a6;
+
+  --accent-glow: rgba(14, 165, 233, 0.15);
+  --accent-glow-green: rgba(45, 212, 191, 0.15);
+  
+  --shadow-glow: 0 0 20px rgba(14, 165, 233, 0.2);
 }
 
 * {

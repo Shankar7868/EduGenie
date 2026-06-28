@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ModeCard from "../components/ModeCard";
 import { SparklesIcon } from "../components/Icons";
+import ThemeSelector from "../components/ThemeSelector";
 import "./Home.css";
 
 export default function Home() {
@@ -27,6 +28,11 @@ export default function Home() {
       description: "Automatically convert study material into beautiful Anki-style cards.",
       route: "/chat/flashcard",
     },
+    {
+      title: "Interactive Quiz",
+      description: "Test your knowledge with an interactive conversational quiz generated from your notes.",
+      route: "/chat/quiz",
+    },
   ];
 
   const features = [
@@ -39,8 +45,8 @@ export default function Home() {
       desc: "Automatically convert Q&A text into beautiful study cards."
     },
     {
-      title: "Voice Assistant (TTS)",
-      desc: "Listen to summaries and study points on the go with built-in voice playback."
+      title: "Export & Download",
+      desc: "Download your flashcards directly to CSV for Anki, or export summaries to Markdown."
     }
   ];
 
@@ -51,13 +57,14 @@ export default function Home() {
       <div className="blur-blob green-blob"></div>
       <div className="grid-overlay"></div>
 
-      <header className="home-header animate-fade-in">
+      <header className="home-header animate-fade-in" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div className="logo-wrapper">
           <div className="logo-icon">
             <SparklesIcon size={24} />
           </div>
           <span className="logo-text">EduGenie</span>
         </div>
+        <ThemeSelector />
       </header>
 
       <main className="home-main">

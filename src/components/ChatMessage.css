@@ -129,7 +129,7 @@
   padding: 16px 20px;
   font-size: 0.95rem;
   line-height: 1.6;
-  max-width: 85%;
+  max-width: 100%;
   word-wrap: break-word;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -306,7 +306,7 @@
 
 .flashcards-carousel-view {
   width: 100%;
-  max-width: 700px; /* Take up more space */
+  max-width: 1000px; /* Take up even more space */
   display: flex;
   justify-content: center;
 }

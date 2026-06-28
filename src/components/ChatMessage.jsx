@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { CopyIcon, CheckIcon, VolumeIcon, VolumeMuteIcon, SparklesIcon, FileIcon, ArrowLeftIcon, ArrowRightIcon } from "./Icons";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { CopyIcon, CheckIcon, SparklesIcon, FileIcon, ArrowLeftIcon, ArrowRightIcon, ExportIcon } from "./Icons";
 import "./ChatMessage.css";
 
 export default function ChatMessage({ role, content }) {
   const [copied, setCopied] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [flashcards, setFlashcards] = useState([]);
   const [flippedCards, setFlippedCards] = useState({});
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -80,44 +81,57 @@ export default function ChatMessage({ role, content }) {
     }
   };
 
-  const handleTextToSpeech = () => {
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-      return;
+  const handleExport = () => {
+    if (flashcards.length > 0) {
+      // Export as CSV
+      const csvContent = "Front,Back\n" + flashcards.map(card => `"${card.question.replace(/"/g, '""')}","${card.answer.replace(/"/g, '""')}"`).join("\n");
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'flashcards.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Export as Markdown
+      const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'study_notes.md');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
-
-    // Clean markdown tags for cleaner speech
-    const cleanText = content
-      .replace(/[*#`_\-]/g, "")
-      .replace(/\[.*?\]\(.*?\)/g, "");
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    
-    utterance.onend = () => {
-      setIsPlaying(false);
-    };
-    utterance.onerror = () => {
-      setIsPlaying(false);
-    };
-
-    window.speechSynthesis.cancel(); // Stop any current speech
-    window.speechSynthesis.speak(utterance);
-    setIsPlaying(true);
   };
-
-  // Clean speech synthesis on unmount
-  useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, []);
 
   const toggleCard = (index) => {
     setFlippedCards((prev) => ({
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const markdownComponents = {
+    code({ node, inline, className, children, ...props }) {
+      const match = /language-(\w+)/.exec(className || "");
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={vscDarkPlus}
+          language={match[1]}
+          PreTag="div"
+          className="syntax-highlighter-block"
+          {...props}
+        >
+          {String(children).replace(/\n$/, "")}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    }
   };
 
   const nextCard = () => {
@@ -164,17 +178,11 @@ export default function ChatMessage({ role, content }) {
         </div>
 
         <div className="message-actions">
-
           {!isUser && (
-            <button
-              className={`action-btn ${isPlaying ? "playing" : ""}`}
-              onClick={handleTextToSpeech}
-              title={isPlaying ? "Stop listening" : "Listen to response"}
-            >
-              {isPlaying ? <VolumeMuteIcon size={16} /> : <VolumeIcon size={16} />}
+            <button className="action-btn" onClick={handleExport} title="Download/Export">
+              <ExportIcon size={16} />
             </button>
           )}
-
           <button className="action-btn" onClick={handleCopy} title="Copy response">
             {copied ? <CheckIcon size={16} className="copied-icon" /> : <CopyIcon size={16} />}
           </button>
@@ -214,14 +222,14 @@ export default function ChatMessage({ role, content }) {
                   <div className="flashcard-front">
                     <div className="card-badge">Card {currentCardIndex + 1} (Question)</div>
                     <div className="card-content large-text">
-                      <ReactMarkdown>{flashcards[currentCardIndex].question}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{flashcards[currentCardIndex].question}</ReactMarkdown>
                     </div>
                     <div className="card-hint">Click to flip</div>
                   </div>
                   <div className="flashcard-back">
                     <div className="card-badge">Answer</div>
                     <div className="card-content-scroll large-text">
-                      <ReactMarkdown>{flashcards[currentCardIndex].answer}</ReactMarkdown>
+                      <ReactMarkdown components={markdownComponents}>{flashcards[currentCardIndex].answer}</ReactMarkdown>
                     </div>
                     <div className="card-hint">Click to flip</div>
                   </div>
@@ -231,7 +239,7 @@ export default function ChatMessage({ role, content }) {
           </div>
         ) : (
           <div className="markdown-content">
-            <ReactMarkdown>{content}</ReactMarkdown>
+            <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
           </div>
         )}
       </div>

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ChatInput from "../components/ChatInput";
 import ChatMessage from "../components/ChatMessage";
+import ThemeSelector from "../components/ThemeSelector";
 import {
   SparklesIcon,
   HomeIcon,
@@ -176,6 +177,8 @@ export default function ChatPage() {
         return "Key Points Extractor";
       case "flashcard":
         return "Flashcards Generator";
+      case "quiz":
+        return "Interactive Quiz";
       default:
         return mode.toUpperCase();
     }
@@ -238,6 +241,9 @@ export default function ChatPage() {
                 </span>
               </div>
             </div>
+          </div>
+          <div className="workspace-header-right">
+            <ThemeSelector />
           </div>
         </header>
 
