@@ -11,9 +11,27 @@ export default function ChatMessage({ role, content }) {
   const [flippedCards, setFlippedCards] = useState({});
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
-  // Parse flashcards if the message is from assistant and contains Q&A
+  // Quiz State
+  const [quizData, setQuizData] = useState(null);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [quizFinished, setQuizFinished] = useState(false);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+
+  // Parse flashcards or quiz if the message is from assistant
   useEffect(() => {
     if (role === "assistant" && content) {
+      // First try to parse as JSON for Quiz Mode
+      try {
+        const cleanContent = content.trim().replace(/^```(?:json)?|```$/gi, '').trim();
+        const parsed = JSON.parse(cleanContent);
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].question && parsed[0].options) {
+          setQuizData(parsed);
+          return;
+        }
+      } catch (e) {
+        // Not a JSON quiz, fall back to flashcard parsing
+      }
+
       const lines = content.split('\n');
       const items = [];
       let currentQ = "";
@@ -109,6 +127,29 @@ export default function ChatMessage({ role, content }) {
     }
   };
 
+  const handleQuizOptionSelect = (option) => {
+    setUserAnswers(prev => ({
+      ...prev,
+      [currentQuizIndex]: option
+    }));
+  };
+
+  const nextQuizQuestion = () => {
+    if (currentQuizIndex < quizData.length - 1) {
+      setCurrentQuizIndex(prev => prev + 1);
+    }
+  };
+
+  const prevQuizQuestion = () => {
+    if (currentQuizIndex > 0) {
+      setCurrentQuizIndex(prev => prev - 1);
+    }
+  };
+
+  const submitQuiz = () => {
+    setQuizFinished(true);
+  };
+
   const toggleCard = (index) => {
     setFlippedCards((prev) => ({
       ...prev,
@@ -193,7 +234,76 @@ export default function ChatMessage({ role, content }) {
       </div>
 
       <div className={`message-bubble ${isUser ? "user-message" : "assistant-message"}`}>
-        {flashcards.length > 0 && !isUser ? (
+        {quizData && quizData.length > 0 && !isUser ? (
+          <div className="quiz-container">
+            {quizFinished ? (
+              <div className="quiz-results animate-fade-in">
+                <div className="quiz-results-header">
+                  <h3>Quiz Results</h3>
+                  <div className="quiz-score-badge">
+                    {quizData.filter((q, i) => userAnswers[i] === q.answer).length} / {quizData.length}
+                  </div>
+                </div>
+                <div className="quiz-review-list">
+                  {quizData.map((q, i) => {
+                    const isCorrect = userAnswers[i] === q.answer;
+                    return (
+                      <div key={i} className={`quiz-review-item ${isCorrect ? 'correct' : 'incorrect'}`}>
+                        <div className="quiz-review-q"><strong>Q{i + 1}:</strong> {q.question}</div>
+                        <div className="quiz-review-answers">
+                          <span className={`answer-badge ${isCorrect ? 'correct' : 'incorrect'}`}>You: {userAnswers[i] || 'None'}</span>
+                          {!isCorrect && <span className="answer-badge correct">Correct: {q.answer}</span>}
+                        </div>
+                        <div className="quiz-review-exp"><strong>Explanation:</strong> {q.explanation}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="flashcards-carousel-container animate-fade-in">
+                <div className="flashcards-carousel-controls">
+                  <button className="carousel-btn" onClick={prevQuizQuestion} disabled={currentQuizIndex === 0}>
+                    <ArrowLeftIcon size={20} />
+                  </button>
+                  <span className="carousel-counter">{currentQuizIndex + 1} / {quizData.length}</span>
+                  <button className="carousel-btn" onClick={nextQuizQuestion} disabled={currentQuizIndex === quizData.length - 1}>
+                    <ArrowRightIcon size={20} />
+                  </button>
+                </div>
+                <div className="quiz-question-view">
+                  <div className="quiz-card">
+                    <div className="card-badge">Question {currentQuizIndex + 1}</div>
+                    <div className="quiz-question-text">
+                      <ReactMarkdown components={markdownComponents}>{quizData[currentQuizIndex].question}</ReactMarkdown>
+                    </div>
+                    <div className="quiz-options-list">
+                      {quizData[currentQuizIndex].options.map((opt, idx) => (
+                        <button 
+                          key={idx} 
+                          className={`quiz-option-btn ${userAnswers[currentQuizIndex] === opt ? 'selected' : ''}`}
+                          onClick={() => handleQuizOptionSelect(opt)}
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {currentQuizIndex === quizData.length - 1 && (
+                    <div className="quiz-submit-container">
+                      <button className="quiz-submit-btn" onClick={submitQuiz} disabled={Object.keys(userAnswers).length !== quizData.length}>
+                        Submit Quiz
+                      </button>
+                      {Object.keys(userAnswers).length !== quizData.length && (
+                        <div className="quiz-warning">Please answer all questions before submitting.</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : flashcards.length > 0 && !isUser ? (
           <div className="flashcards-carousel-container">
             <div className="flashcards-carousel-controls">
               <button 
