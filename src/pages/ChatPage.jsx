@@ -39,7 +39,7 @@ export default function ChatPage() {
     },
   ]);
 
-  const fileInputRef = useRef(null);
+  
   const messagesEndRef = useRef(null);
 
   // Sync sessions history to localStorage
