@@ -14,6 +14,16 @@ export default function Home() {
 
   const modes = [
     {
+      title: "Flashcards",
+      description: "Automatically convert study material into beautiful Anki-style cards.",
+      route: "/chat/flashcard",
+    },
+    {
+      title: "Key Points",
+      description: "Extract important concepts and highlights from documents.",
+      route: "/chat/keypoints",
+    },
+    {
       title: "Q&A Generation",
       description: "Generate exam-oriented questions and answers from your study material.",
       route: "/chat/qna",
@@ -22,16 +32,6 @@ export default function Home() {
       title: "Summary",
       description: "Create concise and structured summaries for quick revision.",
       route: "/chat/summary",
-    },
-    {
-      title: "Key Points",
-      description: "Extract important concepts and highlights from documents.",
-      route: "/chat/keypoints",
-    },
-    {
-      title: "Flashcards",
-      description: "Automatically convert study material into beautiful Anki-style cards.",
-      route: "/chat/flashcard",
     },
     {
       title: "Interactive Quiz",
