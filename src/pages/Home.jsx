@@ -11,17 +11,6 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  
-  // Carousel drag constraints
-  const [width, setWidth] = useState(0);
-  const carouselRef = useRef(null);
-
-  useEffect(() => {
-    if (carouselRef.current) {
-      // Add a small buffer so the last card doesn't stick directly to the edge
-      setWidth(carouselRef.current.scrollWidth - carouselRef.current.offsetWidth + 100);
-    }
-  }, []);
 
   const modes = [
     {
@@ -160,23 +149,18 @@ export default function Home() {
             <p className="text-muted-foreground mt-2">Drag to explore interactive preparation tools.</p>
           </div>
           
-          <div className="w-full overflow-hidden cursor-grab active:cursor-grabbing pb-12 pt-4 pl-6 md:pl-12 xl:pl-24" ref={carouselRef}>
-            <motion.div 
-              drag="x"
-              dragConstraints={{ right: 0, left: -width }}
-              dragElastic={0.1}
-              dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-              className="flex gap-6 pr-12 w-max"
-            >
+          <div className="w-full overflow-x-auto pb-12 pt-4 px-6 md:px-12 xl:px-24 snap-x snap-mandatory hide-scrollbar">
+            <div className="flex gap-6 w-max pr-6 md:pr-12">
               {modes.map((mode) => (
-                <ModeCard
-                  key={mode.title}
-                  title={mode.title}
-                  description={mode.description}
-                  onClick={() => navigate(mode.route)}
-                />
+                <div key={mode.title} className="snap-center shrink-0">
+                  <ModeCard
+                    title={mode.title}
+                    description={mode.description}
+                    onClick={() => navigate(mode.route)}
+                  />
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </section>
 
