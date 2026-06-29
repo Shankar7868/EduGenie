@@ -28,7 +28,7 @@ const CompareModeInput = ({ onSubmit, loading }) => {
 
   const handleCompareSubmit = () => {
     if (topics.some(t => !t.trim())) return;
-    const prompt = `Compare the following topics: ${topics.join(" vs ")}. Provide a comprehensive markdown table comparing them across standard parameters (e.g. Definition, Formula (if applicable), Advantages, Disadvantages, Applications, Examples). Use | for markdown columns.`;
+    const prompt = `Compare: ${topics.join(" vs ")}`;
     onSubmit(prompt);
   };
 
