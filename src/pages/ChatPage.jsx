@@ -34,7 +34,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Upload a PDF study guide, enter a concept, or paste lecture notes to begin!`,
+      content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Enter a concept or paste lecture notes to begin! (PDF upload coming soon)`,
     },
   ]);
 
@@ -44,7 +44,7 @@ export default function ChatPage() {
     setMessages([
       {
         role: "assistant",
-        content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Upload a PDF study guide, enter a concept, or paste lecture notes to begin!`,
+        content: `Welcome to EduGenie ${mode.toUpperCase()} mode. Enter a concept or paste lecture notes to begin! (PDF upload coming soon)`,
       },
     ]);
     setFile(null);
@@ -175,7 +175,7 @@ export default function ChatPage() {
 
   const getLoadingStepLabel = () => {
     switch (loadingStep) {
-      case 1: return "Reading study notes & attachments...";
+      case 1: return "Reading study notes...";
       case 2: return "Analyzing topics & structuring revision plan...";
       case 3: return "Synthesizing comprehensive results...";
       default: return "EduGenie is thinking...";

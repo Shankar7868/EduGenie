@@ -36,8 +36,8 @@ export default function Home() {
 
   const features = [
     {
-      title: "PDF Uploads",
-      desc: "Drag and drop study materials, PDFs, or lecture notes directly."
+      title: "PDF Uploads (Coming Soon)",
+      desc: "Drag and drop study materials, PDFs, or lecture notes directly. Currently disabled for maintenance."
     },
     {
       title: "Interactive Flashcards",
@@ -80,7 +80,7 @@ export default function Home() {
             Your AI-Powered <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500">Exam Preparation</span> Assistant
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-            Accelerate your learning. Upload lecture PDFs, textbook chapters, or course notes, and instantly extract summaries, flashcards, and exam questions.
+            Accelerate your learning. Paste your textbook chapters or course notes, and instantly extract summaries, flashcards, and exam questions. (PDF uploads coming soon!)
           </p>
         </section>
 
