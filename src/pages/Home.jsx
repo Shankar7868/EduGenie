@@ -2,9 +2,13 @@ import { useNavigate } from "react-router-dom";
 import ModeCard from "../components/ModeCard";
 import { SparklesIcon } from "../components/Icons";
 import ThemeSelector from "../components/ThemeSelector";
+import AuthModal from "../components/AuthModal";
+import { useAuth } from "../contexts/AuthProvider";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const modes = [
     {
@@ -65,7 +69,17 @@ export default function Home() {
           </div>
           <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
         </div>
-        <ThemeSelector />
+        <div className="flex items-center gap-4">
+          <ThemeSelector />
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium hidden md:inline-block truncate max-w-[150px]">{user.email}</span>
+              <Button variant="outline" size="sm" onClick={signOut}>Sign Out</Button>
+            </div>
+          ) : (
+            <AuthModal />
+          )}
+        </div>
       </header>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24 z-10 relative flex flex-col gap-24">

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import ChatInput from "../components/ChatInput";
 import ChatMessage from "../components/ChatMessage";
 import ThemeSelector from "../components/ThemeSelector";
+import AuthModal from "../components/AuthModal";
+import { useAuth } from "../contexts/AuthProvider";
 import { SparklesIcon, HomeIcon, MenuIcon, CloseIcon } from "../components/Icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +13,7 @@ import { cn } from "@/lib/utils";
 export default function ChatPage() {
   const { mode } = useParams();
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   const [input, setInput] = useState("");
   const [file, setFile] = useState(null);
@@ -286,8 +289,16 @@ export default function ChatPage() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <ThemeSelector />
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium hidden md:inline-block truncate max-w-[150px]">{user.email}</span>
+                <Button variant="outline" size="sm" onClick={signOut}>Sign Out</Button>
+              </div>
+            ) : (
+              <AuthModal />
+            )}
           </div>
         </header>
 
