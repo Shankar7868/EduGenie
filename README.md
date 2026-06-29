@@ -100,7 +100,7 @@ create policy "Users can delete their own searches"
 The AI orchestration for EduGenie is completely decoupled from the frontend, running on an independent AWS EC2 instance. This architecture ensures scalable prompt handling and API queue management.
 
 ### Steps to replicate the backend:
-1. **Provision an EC2 Instance**: Launch an Ubuntu instance on AWS (e.g., `18.61.252.168`).
+1. **Provision an EC2 Instance**: Launch an Ubuntu instance on AWS (e.g., `18.60.42.250`).
 2. **Install Docker**: Connect to your instance via SSH and install Docker and Docker Compose.
 3. **Run n8n**: Use a `docker-compose.yml` to spin up n8n and an optional PostgreSQL database for workflow storage.
    ```bash
@@ -110,9 +110,19 @@ The AI orchestration for EduGenie is completely decoupled from the frontend, run
    - Import your workflow into n8n.
    - The workflow uses a Webhook node to listen for requests from the React frontend.
    - It is configured with multiple Gemini/OpenAI API keys in a fallback queue to ensure high availability and bypass free-tier rate limits.
-5. **Set up the Webhook Tunnel**: Expose the n8n webhook securely (via reverse proxy, ngrok, or Cloudflare tunnels) and paste the URL into your `.env` file as `VITE_WEBHOOK_URL=[YOUR_WEBHOOK_URL_HERE]`.
+5. **Set up the Webhook Tunnel & Vercel Proxy**: 
+   - To bypass CORS issues when calling the n8n webhook directly from the frontend, we use Vercel's rewrite functionality.
+   - Create a `vercel.json` file in your root directory to proxy `/api/webhook` requests directly to your AWS IP:
+     ```json
+     {
+       "rewrites": [
+         { "source": "/api/webhook/:path*", "destination": "http://18.60.42.250:5678/webhook/:path*" }
+       ]
+     }
+     ```
+   - In your `.env` file, simply set `VITE_WEBHOOK_URL=/api/webhook/[YOUR_N8N_WEBHOOK_ID]`.
 
-> **Note**: Update `[YOUR_WEBHOOK_URL_HERE]` and the IP address `18.61.252.168` with your own values if you are cloning this repository.
+> **Note**: Update `[YOUR_N8N_WEBHOOK_ID]` and the IP address `18.60.42.250` with your own values if you are cloning this repository.
 
 ## 📄 License
 This project is licensed under the MIT License.
