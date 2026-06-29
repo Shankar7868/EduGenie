@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon } from "./Icons";
+import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon, CompareIcon } from "./Icons";
 
 export default function ModeCard({ title, description, onClick }) {
   const ref = useRef(null);
@@ -36,6 +36,7 @@ export default function ModeCard({ title, description, onClick }) {
     if (title.toLowerCase().includes("q&a")) return <QnaIcon size={32} className="text-blue-500" />;
     if (title.toLowerCase().includes("summary")) return <SummaryIcon size={32} className="text-purple-500" />;
     if (title.toLowerCase().includes("flashcard")) return <FlashcardIcon size={32} className="text-emerald-500" />;
+    if (title.toLowerCase().includes("compare")) return <CompareIcon size={32} className="text-rose-500" />;
     return <KeyPointsIcon size={32} className="text-amber-500" />;
   };
 
@@ -43,6 +44,7 @@ export default function ModeCard({ title, description, onClick }) {
     if (title.toLowerCase().includes("q&a")) return "from-blue-500/10 to-transparent shadow-blue-500/5";
     if (title.toLowerCase().includes("summary")) return "from-purple-500/10 to-transparent shadow-purple-500/5";
     if (title.toLowerCase().includes("flashcard")) return "from-emerald-500/10 to-transparent shadow-emerald-500/5";
+    if (title.toLowerCase().includes("compare")) return "from-rose-500/10 to-transparent shadow-rose-500/5";
     return "from-amber-500/10 to-transparent shadow-amber-500/5";
   };
 

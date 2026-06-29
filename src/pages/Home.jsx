@@ -19,6 +19,11 @@ export default function Home() {
       route: "/chat/flashcard",
     },
     {
+      title: "Compare Mode",
+      description: "Compare multiple topics side-by-side to understand differences and similarities.",
+      route: "/chat/compare",
+    },
+    {
       title: "Key Points",
       description: "Extract important concepts and highlights from documents.",
       route: "/chat/keypoints",

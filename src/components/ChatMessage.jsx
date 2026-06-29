@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { CopyIcon, CheckIcon, SparklesIcon, FileIcon, ArrowLeftIcon, ArrowRightIcon, ExportIcon } from "./Icons";
@@ -382,7 +383,7 @@ export default function ChatMessage({ role, content }) {
                   <Card className="bg-muted/20 border-border/50 shadow-sm p-6 flex flex-col gap-5">
                     <div className="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1">Question {currentQuizIndex + 1}</div>
                     <div className="text-lg font-semibold text-foreground">
-                      <ReactMarkdown components={markdownComponents}>{quizData[currentQuizIndex].question}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{quizData[currentQuizIndex].question}</ReactMarkdown>
                     </div>
                     <div className="flex flex-col gap-3">
                       {(quizData[currentQuizIndex].options || [quizData[currentQuizIndex].answer || "True", "False"]).map((opt, idx) => {
@@ -432,10 +433,10 @@ export default function ChatMessage({ role, content }) {
                 <Card key={idx} className="bg-card/50 border-border/50 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-indigo-500/30">
                   <div className="flex items-start gap-3 p-4 bg-indigo-500/5 border-b border-border/50">
                     <div className="bg-indigo-600 text-white px-2.5 py-1 rounded-md text-xs font-bold shrink-0 shadow-sm">Q{idx + 1}</div>
-                    <div className="font-semibold text-base text-foreground leading-snug [&>p]:m-0"><ReactMarkdown components={markdownComponents}>{item.question.replace(/^Q\d+.*?:\s*/i, '')}</ReactMarkdown></div>
+                    <div className="font-semibold text-base text-foreground leading-snug [&>p]:m-0"><ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{item.question.replace(/^Q\d+.*?:\s*/i, '')}</ReactMarkdown></div>
                   </div>
                   <div className="p-4 text-muted-foreground leading-relaxed [&>p:last-child]:mb-0">
-                    <ReactMarkdown components={markdownComponents}>{item.answer}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{item.answer}</ReactMarkdown>
                   </div>
                 </Card>
               ))}
@@ -461,7 +462,7 @@ export default function ChatMessage({ role, content }) {
                       isFacts && "text-pink-500"
                     )}>{sectionKey.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}]/gu, '')}</div>
                     <div className="p-4 text-muted-foreground leading-relaxed [&>p:last-child]:mb-0">
-                      <ReactMarkdown components={markdownComponents}>{summaryData[sectionKey]}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{summaryData[sectionKey]}</ReactMarkdown>
                     </div>
                   </Card>
                 )
@@ -491,7 +492,7 @@ export default function ChatMessage({ role, content }) {
                       isHero && "text-lg",
                       !isHero && "[&>ul]:pl-5 [&>ul>li]:mb-1.5"
                     )}>
-                      <ReactMarkdown components={markdownComponents}>{keypointsData[sectionKey]}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{keypointsData[sectionKey]}</ReactMarkdown>
                     </div>
                   </Card>
                 )
@@ -538,7 +539,7 @@ export default function ChatMessage({ role, content }) {
                   <div className="absolute inset-0 w-full h-full [backface-visibility:hidden] p-8 flex flex-col justify-between rounded-2xl bg-gradient-to-br from-muted/50 to-muted/20 text-foreground">
                     <div className="text-sm font-bold uppercase tracking-wider text-indigo-500 mb-2">Card {currentCardIndex + 1} <span className="opacity-70 mx-1">•</span> Question</div>
                     <div className="text-xl md:text-2xl font-semibold text-center my-auto leading-relaxed line-clamp-6">
-                      <ReactMarkdown components={markdownComponents}>{flashcards[currentCardIndex].question}</ReactMarkdown>
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{flashcards[currentCardIndex].question}</ReactMarkdown>
                     </div>
                     <div className="text-xs text-center text-muted-foreground uppercase tracking-widest font-semibold mt-4 flex items-center justify-center gap-2">
                       <span className="w-8 h-[1px] bg-border"></span> Click to flip <span className="w-8 h-[1px] bg-border"></span>
@@ -549,7 +550,7 @@ export default function ChatMessage({ role, content }) {
                     <div className="text-sm font-bold uppercase tracking-wider text-pink-500 mb-2">Answer</div>
                     <ScrollArea className="h-[220px] w-full my-2 pr-3">
                       <div className="text-lg md:text-xl font-medium text-center leading-relaxed flex items-center justify-center min-h-full">
-                        <ReactMarkdown components={markdownComponents}>{flashcards[currentCardIndex].answer}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{flashcards[currentCardIndex].answer}</ReactMarkdown>
                       </div>
                     </ScrollArea>
                     <div className="text-xs text-center text-muted-foreground uppercase tracking-widest font-semibold mt-4 flex items-center justify-center gap-2">
@@ -562,7 +563,7 @@ export default function ChatMessage({ role, content }) {
           </div>
         ) : (
           <div className="w-full">
-            <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{content}</ReactMarkdown>
           </div>
         )}
       </div>

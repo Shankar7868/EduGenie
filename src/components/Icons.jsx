@@ -160,3 +160,10 @@ export const ExportIcon = (props) => (
     <line x1="12" y1="13" x2="12" y2="3" />
   </IconWrapper>
 );
+
+export const CompareIcon = (props) => (
+  <IconWrapper {...props}>
+    <rect x="2" y="3" width="20" height="18" rx="2" ry="2" />
+    <line x1="12" y1="3" x2="12" y2="21" />
+  </IconWrapper>
+);

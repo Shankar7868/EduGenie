@@ -11,6 +11,69 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
+const CompareModeInput = ({ onSubmit, loading }) => {
+  const [count, setCount] = useState(null);
+  const [topics, setTopics] = useState(["", ""]);
+
+  const handleCountSelect = (c) => {
+    setCount(c);
+    setTopics(Array(c).fill(""));
+  };
+
+  const handleTopicChange = (idx, val) => {
+    const newTopics = [...topics];
+    newTopics[idx] = val;
+    setTopics(newTopics);
+  };
+
+  const handleCompareSubmit = () => {
+    if (topics.some(t => !t.trim())) return;
+    const prompt = `Compare the following topics: ${topics.join(" vs ")}. Provide a comprehensive markdown table comparing them across standard parameters (e.g. Definition, Formula (if applicable), Advantages, Disadvantages, Applications, Examples). Use | for markdown columns.`;
+    onSubmit(prompt);
+  };
+
+  if (!count) {
+    return (
+      <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 bg-secondary/30 p-6 rounded-2xl border border-border/50 shadow-sm backdrop-blur-md">
+        <div className="text-center font-bold text-foreground mb-2">How many topics do you want to compare?</div>
+        <div className="flex justify-center gap-6">
+          <Button onClick={() => handleCountSelect(2)} className="w-24 h-16 text-xl rounded-2xl bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500 hover:text-white border-2 border-indigo-500/20 shadow-sm transition-all hover:scale-105">2</Button>
+          <Button onClick={() => handleCountSelect(3)} className="w-24 h-16 text-xl rounded-2xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white border-2 border-emerald-500/20 shadow-sm transition-all hover:scale-105">3</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 bg-secondary/30 p-6 rounded-2xl border border-border/50 shadow-sm backdrop-blur-md">
+      <div className="flex justify-between items-center mb-2">
+        <h3 className="font-bold text-foreground">Enter {count} Topics to Compare</h3>
+        <Button variant="ghost" size="sm" onClick={() => setCount(null)} className="h-8 text-muted-foreground hover:text-foreground">Change Count</Button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-4">
+        {topics.map((topic, idx) => (
+          <input
+            key={idx}
+            type="text"
+            placeholder={`Topic ${idx + 1}...`}
+            className="flex-1 bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
+            value={topic}
+            onChange={(e) => handleTopicChange(idx, e.target.value)}
+            disabled={loading}
+          />
+        ))}
+      </div>
+      <Button 
+        onClick={handleCompareSubmit} 
+        disabled={loading || topics.some(t => !t.trim())}
+        className="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 font-bold shadow-md transition-all active:scale-95"
+      >
+        {loading ? "Generating Comparison..." : "Generate Comparison Table"}
+      </Button>
+    </div>
+  );
+};
+
 export default function ChatPage() {
   const { mode } = useParams();
   const navigate = useNavigate();
@@ -96,10 +159,11 @@ export default function ChatPage() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  const handleSubmit = async () => {
-    if (!input.trim() && !file) return;
+  const handleSubmit = async (customPrompt = null) => {
+    const promptToSubmit = typeof customPrompt === 'string' ? customPrompt : input;
+    if (!promptToSubmit.trim() && !file) return;
 
-    const currentInput = input;
+    const currentInput = promptToSubmit;
     const currentFile = file;
 
     const userContent = currentInput || `Uploaded: ${currentFile?.name}`;
@@ -211,6 +275,7 @@ export default function ChatPage() {
       case "keypoints": return "Key Points Extractor";
       case "flashcard": return "Flashcards Generator";
       case "quiz": return "Interactive Quiz";
+      case "compare": return "Compare Mode";
       default: return mode.toUpperCase();
     }
   };
@@ -373,15 +438,19 @@ export default function ChatPage() {
         {/* Input Area */}
         <div className="p-4 md:p-6 bg-gradient-to-t from-background via-background to-transparent sticky bottom-0 z-20">
           <div className="max-w-4xl mx-auto w-full">
-            <ChatInput
-              input={input}
-              setInput={setInput}
-              file={file}
-              setFile={setFile}
-              onSubmit={handleSubmit}
-              loading={loading}
-              placeholder={`Enter topic or paste notes to generate your ${getModeLabel()}...`}
-            />
+            {mode === 'compare' ? (
+              <CompareModeInput onSubmit={(prompt) => { setInput(prompt); handleSubmit(prompt); }} loading={loading} />
+            ) : (
+              <ChatInput
+                input={input}
+                setInput={setInput}
+                file={file}
+                setFile={setFile}
+                onSubmit={handleSubmit}
+                loading={loading}
+                placeholder={`Enter topic or paste notes to generate your ${getModeLabel()}...`}
+              />
+            )}
           </div>
         </div>
       </main>
