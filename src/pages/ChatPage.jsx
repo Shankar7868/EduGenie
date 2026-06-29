@@ -5,6 +5,7 @@ import ChatMessage from "../components/ChatMessage";
 import ThemeSelector from "../components/ThemeSelector";
 import AuthModal from "../components/AuthModal";
 import { useAuth } from "../contexts/AuthProvider";
+import { supabase } from "../lib/supabase";
 import { SparklesIcon, HomeIcon, MenuIcon, CloseIcon } from "../components/Icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,8 +32,25 @@ export default function ChatPage() {
   });
 
   useEffect(() => {
-    localStorage.setItem("edugenie_history", JSON.stringify(searchHistory));
-  }, [searchHistory]);
+    if (!user) {
+      localStorage.setItem("edugenie_history", JSON.stringify(searchHistory));
+    }
+  }, [searchHistory, user]);
+
+  useEffect(() => {
+    if (user) {
+      const loadHistory = async () => {
+        const { data } = await supabase
+          .from('search_history')
+          .select('query')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(20);
+        if (data) setSearchHistory(data.map(item => item.query));
+      };
+      loadHistory();
+    }
+  }, [user]);
 
   const [messages, setMessages] = useState([
     {
@@ -94,10 +112,31 @@ export default function ChatPage() {
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
 
-    setSearchHistory(prev => {
-      const filtered = prev.filter(item => item !== userContent);
-      return [userContent, ...filtered].slice(0, 50);
-    });
+    if (user) {
+      try {
+        await supabase.from('search_history').insert([{ user_id: user.id, query: userContent }]);
+        const { data } = await supabase
+          .from('search_history')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+          
+        if (data && data.length > 20) {
+          const idsToDelete = data.slice(20).map(item => item.id);
+          await supabase.from('search_history').delete().in('id', idsToDelete);
+          setSearchHistory(data.slice(0, 20).map(item => item.query));
+        } else if (data) {
+          setSearchHistory(data.map(item => item.query));
+        }
+      } catch (err) {
+        console.error("DB history error:", err);
+      }
+    } else {
+      setSearchHistory(prev => {
+        const filtered = prev.filter(item => item !== userContent);
+        return [userContent, ...filtered].slice(0, 20);
+      });
+    }
 
     setInput("");
     setFile(null);
