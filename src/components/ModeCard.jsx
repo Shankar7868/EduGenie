@@ -1,49 +1,88 @@
+import { useRef } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon } from "./Icons";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function ModeCard({ title, description, onClick }) {
+  const ref = useRef(null);
+  
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    x.set(mouseX / width - 0.5);
+    y.set(mouseY / height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   const getIcon = () => {
-    if (title.toLowerCase().includes("q&a")) {
-      return <QnaIcon size={32} className="text-blue-500" />;
-    } else if (title.toLowerCase().includes("summary")) {
-      return <SummaryIcon size={32} className="text-purple-500" />;
-    } else if (title.toLowerCase().includes("flashcard")) {
-      return <FlashcardIcon size={32} className="text-emerald-500" />;
-    } else {
-      return <KeyPointsIcon size={32} className="text-amber-500" />;
-    }
+    if (title.toLowerCase().includes("q&a")) return <QnaIcon size={32} className="text-blue-500" />;
+    if (title.toLowerCase().includes("summary")) return <SummaryIcon size={32} className="text-purple-500" />;
+    if (title.toLowerCase().includes("flashcard")) return <FlashcardIcon size={32} className="text-emerald-500" />;
+    return <KeyPointsIcon size={32} className="text-amber-500" />;
   };
 
   const getGradient = () => {
-    if (title.toLowerCase().includes("q&a")) return "group-hover:from-blue-500/10 group-hover:to-transparent";
-    if (title.toLowerCase().includes("summary")) return "group-hover:from-purple-500/10 group-hover:to-transparent";
-    if (title.toLowerCase().includes("flashcard")) return "group-hover:from-emerald-500/10 group-hover:to-transparent";
-    return "group-hover:from-amber-500/10 group-hover:to-transparent";
+    if (title.toLowerCase().includes("q&a")) return "from-blue-500/10 to-transparent shadow-blue-500/5";
+    if (title.toLowerCase().includes("summary")) return "from-purple-500/10 to-transparent shadow-purple-500/5";
+    if (title.toLowerCase().includes("flashcard")) return "from-emerald-500/10 to-transparent shadow-emerald-500/5";
+    return "from-amber-500/10 to-transparent shadow-amber-500/5";
   };
 
   return (
-    <Card 
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
-      className={`group relative overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-indigo-500/10 border-border/50 bg-background/50 backdrop-blur-xl bg-gradient-to-br ${getGradient()}`}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      whileHover={{ scale: 1.02, zIndex: 10 }}
+      whileTap={{ scale: 0.98 }}
+      className={`group relative flex flex-col justify-between w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl border border-border/50 bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()} shrink-0`}
     >
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="p-2.5 rounded-xl bg-secondary/50 ring-1 ring-border/50 transition-transform duration-300 group-hover:scale-110">
+      <div 
+        style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
+        className="flex flex-row items-center justify-between pointer-events-none"
+      >
+        <div className="p-3 rounded-xl bg-secondary/80 ring-1 ring-border/50 transition-transform duration-300 group-hover:scale-110">
           {getIcon()}
         </div>
         <ArrowRight className="w-5 h-5 text-muted-foreground transition-all duration-300 group-hover:text-foreground group-hover:translate-x-1" />
-      </CardHeader>
-      <CardContent className="pt-4">
-        <CardTitle className="text-xl mb-2">{title}</CardTitle>
+      </div>
+      
+      <div style={{ transform: "translateZ(30px)" }} className="mt-4 flex-1 pointer-events-none">
+        <h3 className="text-xl font-bold mb-2 text-foreground">{title}</h3>
         <p className="text-sm text-muted-foreground leading-relaxed">
           {description}
         </p>
-      </CardContent>
-      <CardFooter>
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-500 transition-colors">
+      </div>
+
+      <div style={{ transform: "translateZ(40px)" }} className="mt-4 pointer-events-none">
+        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground group-hover:text-indigo-500 transition-colors">
           Start Preparing
         </span>
-      </CardFooter>
-    </Card>
+      </div>
+    </motion.div>
   );
 }
