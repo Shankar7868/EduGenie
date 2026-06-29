@@ -18,6 +18,19 @@ export default function ChatPage() {
   const [loadingStep, setLoadingStep] = useState(0); 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [searchHistory, setSearchHistory] = useState(() => {
+    try {
+      const saved = localStorage.getItem("edugenie_history");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("edugenie_history", JSON.stringify(searchHistory));
+  }, [searchHistory]);
+
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -68,14 +81,20 @@ export default function ChatPage() {
     const currentInput = input;
     const currentFile = file;
 
+    const userContent = currentInput || `Uploaded: ${currentFile?.name}`;
     const userMessage = {
       role: "user",
-      content: currentInput || `Uploaded: ${currentFile?.name}`,
+      content: userContent,
       timestamp: Date.now(),
     };
 
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
+
+    setSearchHistory(prev => {
+      const filtered = prev.filter(item => item !== userContent);
+      return [userContent, ...filtered].slice(0, 50);
+    });
 
     setInput("");
     setFile(null);
@@ -201,7 +220,29 @@ export default function ChatPage() {
           </Button>
         </div>
 
-        <div className="flex-1 overflow-hidden">{/* Reserved for history or tools */}</div>
+        <ScrollArea className="flex-1 px-3 py-4">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-3">History</span>
+            {searchHistory.length === 0 ? (
+              <p className="text-sm text-muted-foreground px-3 italic">No past searches yet.</p>
+            ) : (
+              searchHistory.map((query, idx) => (
+                <Button 
+                  key={idx}
+                  variant="ghost" 
+                  className="justify-start font-normal text-sm px-3 h-auto py-2.5 text-muted-foreground hover:text-foreground hover:bg-secondary/50 w-full text-left"
+                  onClick={() => {
+                    setInput(query.startsWith('Uploaded: ') ? '' : query);
+                    if (window.innerWidth < 768) setSidebarOpen(false);
+                  }}
+                  title={query}
+                >
+                  <div className="truncate w-full">{query}</div>
+                </Button>
+              ))
+            )}
+          </div>
+        </ScrollArea>
 
         <div className="p-4 border-t border-border/50">
           <Button 
