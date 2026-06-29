@@ -1,7 +1,7 @@
 <div align="center">
-  <img src=".github/assets/hero_banner.jpg" alt="EduGenie Hero Banner" width="100%" />
+  <!-- TODO: Replace this placeholder with a screenshot of your live application -->
+  <img src=".github/assets/live_snapshot_hero.png" alt="EduGenie Live Execution Snapshot" width="100%" />
 </div>
-
 <h1 align="center">EduGenie 2.0</h1>
 
 <p align="center">
@@ -19,9 +19,9 @@
 <br>
 
 <div align="center">
-  <img src=".github/assets/app_mockup.jpg" alt="EduGenie App Interface" width="100%" />
+  <!-- TODO: Replace this placeholder with a screenshot of your chat interface -->
+  <img src=".github/assets/live_snapshot_chat.png" alt="EduGenie Live Chat Interface" width="100%" />
 </div>
-
 ## ✨ Features
 
 - 🧠 **Interactive Flashcards**: Automatically generate beautiful Anki-style cards from your text.
@@ -37,7 +37,7 @@
 - **Frontend Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/)
 - **Authentication & Database**: [Supabase](https://supabase.com/) (PostgreSQL)
-- **AI Backend / Webhook**: [n8n](https://n8n.io/)
+- **AI Backend / Orchestration**: [n8n](https://n8n.io/) workflows running on an **AWS EC2 Ubuntu Instance**.
 - **Routing**: React Router DOM
 
 ## 📋 Requirements & Installation
