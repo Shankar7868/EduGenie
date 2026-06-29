@@ -97,11 +97,11 @@ export default function Home() {
       <header className="h-20 flex justify-between items-center px-6 md:px-10 border-b border-border/40 backdrop-blur-md z-10 relative">
         <div className="flex items-center gap-3">
           <motion.div 
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.5 }}
-            className="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.35)]"
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(99,102,241,0.35)] ring-1 ring-white/10"
           >
-            <SparklesIcon size={24} />
+            <img src="/logo.jpg" alt="EduGenie Logo" className="w-full h-full object-cover" />
           </motion.div>
           <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
         </div>

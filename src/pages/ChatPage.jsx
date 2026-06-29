@@ -247,8 +247,8 @@ export default function ChatPage() {
             className="flex items-center gap-2 cursor-pointer transition-opacity hover:opacity-80" 
             onClick={() => navigate("/")}
           >
-            <div className="w-8 h-8 rounded-lg bg-indigo-500 text-white flex items-center justify-center shadow-sm">
-              <SparklesIcon size={16} />
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(99,102,241,0.35)] ring-1 ring-white/10 flex items-center justify-center">
+              <img src="/logo.jpg" alt="EduGenie Logo" className="w-full h-full object-cover" />
             </div>
             <span className="font-bold text-lg text-foreground tracking-tight">EduGenie</span>
           </div>
