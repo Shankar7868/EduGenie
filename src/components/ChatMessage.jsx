@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-export default function ChatMessage({ role, content }) {
+export default function ChatMessage({ role, content, mode }) {
   const [copied, setCopied] = useState(false);
   const [flashcards, setFlashcards] = useState([]);
   const [flippedCards, setFlippedCards] = useState({});
@@ -46,7 +46,7 @@ export default function ChatMessage({ role, content }) {
       }
 
       // 2. Check for Summary Mode
-      if (content.includes("## 📌 Overview") || content.includes("## 🔑 Key Concepts")) {
+      if (mode === "summary" || (!mode && (content.includes("## 📌 Overview") || content.includes("## 🔑 Key Concepts")))) {
         const sections = {};
         const lines = content.split('\n');
         let currentSection = null;
@@ -69,7 +69,7 @@ export default function ChatMessage({ role, content }) {
       }
 
       // 3. Check for Keypoints Mode
-      if (content.includes("## 📚 Core Definition") || content.includes("## ⚡ Key Points")) {
+      if (mode === "keypoints" || (!mode && (content.includes("## 📚 Core Definition") || content.includes("## ⚡ Key Points")))) {
         const sections = {};
         const lines = content.split('\n');
         let currentSection = null;
@@ -91,8 +91,8 @@ export default function ChatMessage({ role, content }) {
         }
       }
 
-      // 4. Check for QnA Mode
-      if (content.match(/\*\*Q1/i) || content.match(/\*\*Q1\s*\[/i)) {
+      // 4. Check for QnA Mode or MCQ
+      if ((mode === "qna" || !mode) && (content.match(/\*\*Q1/i) || content.match(/\*\*Q1\s*\[/i))) {
         const items = [];
         const lines = content.split('\n');
         let currentQ = "";
@@ -132,12 +132,12 @@ export default function ChatMessage({ role, content }) {
       }
 
       // 5. Check for Flashcard Mode
-      const lines = content.split('\n');
-      const items = [];
-      let currentQ = "";
-      let currentA = "";
-      let inA = false;
-
+      if ((mode === "flashcard" || !mode) && content.includes("🃏 **Card 1**")) {
+        const lines = content.split('\n');
+        const items = [];
+        let currentQ = "";
+        let currentA = "";
+        let inA = false;
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
@@ -176,6 +176,7 @@ export default function ChatMessage({ role, content }) {
       
       if (items.length > 0) {
         setFlashcards(items);
+      }
       }
     }
   }, [role, content]);
