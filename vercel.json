@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/webhook/AI_agent",
-      "destination": "http://18.61.252.168/webhook/AI_agent"
+      "destination": "http://18.60.42.250/webhook/AI_agent"
     }
   ]
 }
