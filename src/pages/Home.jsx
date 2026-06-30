@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ModeCard from "../components/ModeCard";
+import OnboardingTour from "../components/OnboardingTour";
 import { SparklesIcon } from "../components/Icons";
 import ThemeSelector from "../components/ThemeSelector";
 import AuthModal from "../components/AuthModal";
@@ -75,7 +76,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-x-hidden bg-background w-full">
+    <div className="min-h-screen flex flex-col bg-background font-sans overflow-x-hidden selection:bg-indigo-500/30">
+      <OnboardingTour />
       {/* Decorative 3D floating blur orbs with motion */}
       <motion.div 
         animate={{ 
@@ -111,14 +113,23 @@ export default function Home() {
           <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
         </div>
         <div className="flex items-center gap-4">
-          <ThemeSelector />
+          <div id="tour-theme-toggle">
+            <ThemeSelector />
+          </div>
           {user ? (
             <div className="flex items-center gap-3">
-              <span className="text-sm font-medium hidden md:inline-block truncate max-w-[150px]">{user.email}</span>
-              <Button variant="outline" size="sm" onClick={signOut}>Sign Out</Button>
+              <span className="text-sm font-medium hidden md:inline-block text-foreground truncate max-w-[150px]">{user.email}</span>
+              <button 
+                onClick={signOut}
+                className="text-sm font-semibold px-4 py-2 rounded-full bg-secondary/80 text-foreground hover:bg-secondary transition-colors"
+              >
+                Sign Out
+              </button>
             </div>
           ) : (
-            <AuthModal />
+            <div id="tour-auth-btn">
+              <AuthModal />
+            </div>
           )}
         </div>
       </header>
@@ -155,9 +166,13 @@ export default function Home() {
           </div>
           
           <div className="w-full pb-12 pt-4 px-6 md:px-12 xl:px-24">
-            <div className="flex flex-wrap justify-center md:justify-start gap-6">
+            <div id="tour-study-modes" className="flex flex-wrap justify-center md:justify-start gap-6 rounded-2xl p-2 -m-2">
               {modes.map((mode) => (
-                <div key={mode.title} className="flex justify-center w-full sm:w-auto">
+                <div 
+                  key={mode.title} 
+                  id={mode.title === "Compare Mode" ? "tour-compare-mode" : ""}
+                  className="flex justify-center w-full sm:w-auto"
+                >
                   <ModeCard
                     title={mode.title}
                     description={mode.description}
