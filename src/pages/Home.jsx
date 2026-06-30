@@ -114,6 +114,13 @@ export default function Home() {
           <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
         </div>
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => window.dispatchEvent(new Event("restart-tour"))}
+            className="text-sm font-semibold px-4 py-2 rounded-full bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 transition-colors hidden sm:flex items-center gap-2"
+          >
+            <SparklesIcon size={16} />
+            Tour
+          </button>
           <div id="tour-theme-toggle">
             <ThemeSelector />
           </div>

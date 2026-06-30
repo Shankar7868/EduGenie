@@ -3,6 +3,7 @@ import { Joyride, STATUS } from "react-joyride";
 
 export default function OnboardingTour() {
   const [run, setRun] = useState(false);
+  const [tourKey, setTourKey] = useState(0);
 
   useEffect(() => {
     // Only run the tour if the user hasn't completed it before
@@ -14,6 +15,15 @@ export default function OnboardingTour() {
       }, 1000);
       return () => clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleRestart = () => {
+      setTourKey(prev => prev + 1);
+      setRun(true);
+    };
+    window.addEventListener("restart-tour", handleRestart);
+    return () => window.removeEventListener("restart-tour", handleRestart);
   }, []);
 
   const steps = [
@@ -122,6 +132,7 @@ export default function OnboardingTour() {
 
   return (
     <Joyride
+      key={tourKey}
       callback={handleJoyrideCallback}
       continuous
       hideCloseButton
@@ -129,6 +140,7 @@ export default function OnboardingTour() {
       scrollToFirstStep
       showProgress
       showSkipButton
+      locale={{ skip: 'End Tour' }}
       steps={steps}
       styles={{
         options: {
