@@ -147,17 +147,17 @@ export default function Home() {
           </motion.p>
         </motion.section>
 
-        {/* 3D Draggable Carousel Section */}
-        <section className="flex flex-col w-full">
-          <div className="px-6 md:px-12 xl:px-24 mb-8">
+        {/* Study Modes Grid Section */}
+        <section className="flex flex-col w-full max-w-7xl mx-auto">
+          <div className="px-6 md:px-12 xl:px-24 mb-8 text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">Select a Study Mode</h2>
-            <p className="text-muted-foreground mt-2">Drag to explore interactive preparation tools.</p>
+            <p className="text-muted-foreground mt-2">Explore interactive preparation tools tailored for you.</p>
           </div>
           
-          <div className="w-full overflow-x-auto pb-12 pt-4 px-6 md:px-12 xl:px-24 snap-x snap-mandatory hide-scrollbar">
-            <div className="flex gap-6 w-max pr-6 md:pr-12">
+          <div className="w-full pb-12 pt-4 px-6 md:px-12 xl:px-24">
+            <div className="flex flex-wrap justify-center md:justify-start gap-6">
               {modes.map((mode) => (
-                <div key={mode.title} className="snap-center shrink-0">
+                <div key={mode.title} className="flex justify-center w-full sm:w-auto">
                   <ModeCard
                     title={mode.title}
                     description={mode.description}

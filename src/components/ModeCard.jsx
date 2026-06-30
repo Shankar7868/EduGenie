@@ -61,7 +61,7 @@ export default function ModeCard({ title, description, onClick }) {
       }}
       whileHover={{ scale: 1.02, zIndex: 10 }}
       whileTap={{ scale: 0.98 }}
-      className={`group relative flex flex-col justify-between w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl border border-border/50 bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()} shrink-0`}
+      className={`group relative flex flex-col justify-between w-full max-w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl border border-border/50 bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()}`}
     >
       <div 
         style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
