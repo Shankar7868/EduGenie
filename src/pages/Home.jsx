@@ -77,7 +77,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans overflow-x-hidden selection:bg-indigo-500/30">
+    <div className="min-h-screen flex flex-col bg-background font-sans selection:bg-indigo-500/30">
       <OnboardingTour />
       {/* Decorative 3D floating blur orbs with motion */}
       <motion.div 

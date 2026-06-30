@@ -37,7 +37,6 @@ export default function OnboardingTour() {
       ),
       placement: "center",
       disableBeacon: true,
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-compare-mode",
@@ -48,7 +47,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-flashcards",
@@ -59,7 +57,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-key-points",
@@ -70,7 +67,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-q-a-generation",
@@ -81,7 +77,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-summary",
@@ -92,7 +87,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-mode-interactive-quiz",
@@ -103,7 +97,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-theme-toggle",
@@ -114,7 +107,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     },
     {
       target: "#tour-auth-btn",
@@ -125,7 +117,6 @@ export default function OnboardingTour() {
         </div>
       ),
       placement: "bottom",
-      showSkipButton: true,
     }
   ];
 
@@ -151,6 +142,8 @@ export default function OnboardingTour() {
       showSkipButton
       locale={{ skip: 'End Tour' }}
       steps={steps}
+      disableScrollParentFix
+      scrollOffset={150}
       styles={{
         options: {
           zIndex: 10000,
