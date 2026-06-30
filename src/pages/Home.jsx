@@ -15,14 +15,15 @@ export default function Home() {
 
   const modes = [
     {
-      title: "Flashcards",
-      description: "Automatically convert study material into beautiful Anki-style cards.",
-      route: "/chat/flashcard",
-    },
-    {
       title: "Compare Mode",
       description: "Compare multiple topics side-by-side to understand differences and similarities.",
       route: "/chat/compare",
+      isNew: true,
+    },
+    {
+      title: "Flashcards",
+      description: "Automatically convert study material into beautiful Anki-style cards.",
+      route: "/chat/flashcard",
     },
     {
       title: "Key Points",
@@ -167,19 +168,23 @@ export default function Home() {
           
           <div className="w-full pb-12 pt-4 px-6 md:px-12 xl:px-24">
             <div id="tour-study-modes" className="flex flex-wrap justify-center md:justify-start gap-6 rounded-2xl p-2 -m-2">
-              {modes.map((mode) => (
-                <div 
-                  key={mode.title} 
-                  id={mode.title === "Compare Mode" ? "tour-compare-mode" : ""}
-                  className="flex justify-center w-full sm:w-auto"
-                >
-                  <ModeCard
-                    title={mode.title}
-                    description={mode.description}
-                    onClick={() => navigate(mode.route)}
-                  />
-                </div>
-              ))}
+              {modes.map((mode) => {
+                const tourId = `tour-mode-${mode.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+                return (
+                  <div 
+                    key={mode.title} 
+                    id={tourId}
+                    className="flex justify-center w-full sm:w-auto"
+                  >
+                    <ModeCard
+                      title={mode.title}
+                      description={mode.description}
+                      onClick={() => navigate(mode.route)}
+                      isNew={mode.isNew}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

@@ -29,21 +29,61 @@ export default function OnboardingTour() {
       disableBeacon: true,
     },
     {
-      target: "#tour-study-modes",
-      content: (
-        <div className="text-left">
-          <h3 className="font-bold text-lg mb-2">Explore Study Modes</h3>
-          <p className="text-sm">Choose from Flashcards, Key Points, Q&A, and more. Each mode is designed to optimize your learning experience.</p>
-        </div>
-      ),
-      placement: "top",
-    },
-    {
-      target: "#tour-compare-mode",
+      target: "#tour-mode-compare-mode",
       content: (
         <div className="text-left">
           <h3 className="font-bold text-lg mb-2 text-rose-500">New: Compare Mode</h3>
-          <p className="text-sm">Select this mode to analyze 2 or 3 topics side-by-side in a beautifully formatted table!</p>
+          <p className="text-sm">Select this mode to analyze 2 or 3 topics side-by-side in a beautifully formatted table! It's great for understanding differences.</p>
+        </div>
+      ),
+      placement: "bottom",
+    },
+    {
+      target: "#tour-mode-flashcards",
+      content: (
+        <div className="text-left">
+          <h3 className="font-bold text-lg mb-2 text-emerald-500">Flashcards</h3>
+          <p className="text-sm">Automatically generate interactive Anki-style 3D flashcards from your text to memorize concepts effectively.</p>
+        </div>
+      ),
+      placement: "bottom",
+    },
+    {
+      target: "#tour-mode-key-points",
+      content: (
+        <div className="text-left">
+          <h3 className="font-bold text-lg mb-2 text-amber-500">Key Points</h3>
+          <p className="text-sm">Extract the most important highlights and core definitions from long documents in seconds.</p>
+        </div>
+      ),
+      placement: "bottom",
+    },
+    {
+      target: "#tour-mode-q-a-generation",
+      content: (
+        <div className="text-left">
+          <h3 className="font-bold text-lg mb-2 text-blue-500">Q&A Generation</h3>
+          <p className="text-sm">Turn your notes into exam-oriented questions and answers. Perfect for test preparation!</p>
+        </div>
+      ),
+      placement: "bottom",
+    },
+    {
+      target: "#tour-mode-summary",
+      content: (
+        <div className="text-left">
+          <h3 className="font-bold text-lg mb-2 text-purple-500">Summary</h3>
+          <p className="text-sm">Create concise and perfectly structured markdown summaries for quick, high-yield revision.</p>
+        </div>
+      ),
+      placement: "bottom",
+    },
+    {
+      target: "#tour-mode-interactive-quiz",
+      content: (
+        <div className="text-left">
+          <h3 className="font-bold text-lg mb-2 text-orange-500">Interactive Quiz</h3>
+          <p className="text-sm">Test your knowledge with a conversational quiz generated directly from your notes!</p>
         </div>
       ),
       placement: "bottom",
