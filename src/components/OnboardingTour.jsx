@@ -3,7 +3,6 @@ import { Joyride, STATUS } from "react-joyride";
 
 export default function OnboardingTour() {
   const [run, setRun] = useState(false);
-  const [tourKey, setTourKey] = useState(0);
 
   useEffect(() => {
     // Only run the tour if the user hasn't completed it before
@@ -15,15 +14,6 @@ export default function OnboardingTour() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, []);
-
-  useEffect(() => {
-    const handleRestart = () => {
-      setTourKey(prev => prev + 1);
-      setRun(true);
-    };
-    window.addEventListener("restart-tour", handleRestart);
-    return () => window.removeEventListener("restart-tour", handleRestart);
   }, []);
 
   const steps = [
@@ -39,61 +29,61 @@ export default function OnboardingTour() {
       disableBeacon: true,
     },
     {
-      target: "#tour-mode-compare-mode",
+      target: "#tour-compare",
       content: (
         <div className="text-left">
           <h3 className="font-bold text-lg mb-2 text-rose-500">New: Compare Mode</h3>
-          <p className="text-sm">Select this mode to analyze 2 or 3 topics side-by-side in a beautifully formatted table! It's great for understanding differences.</p>
+          <p className="text-sm">Our new signature feature! Analyze 2 or 3 topics side-by-side in a beautifully formatted table.</p>
         </div>
       ),
       placement: "bottom",
     },
     {
-      target: "#tour-mode-flashcards",
+      target: "#tour-flashcard",
       content: (
         <div className="text-left">
-          <h3 className="font-bold text-lg mb-2 text-emerald-500">Flashcards</h3>
-          <p className="text-sm">Automatically generate interactive Anki-style 3D flashcards from your text to memorize concepts effectively.</p>
+          <h3 className="font-bold text-lg mb-2">Flashcards</h3>
+          <p className="text-sm">Automatically convert your study material into beautiful Anki-style cards for active recall.</p>
         </div>
       ),
       placement: "bottom",
     },
     {
-      target: "#tour-mode-key-points",
+      target: "#tour-keypoints",
       content: (
         <div className="text-left">
-          <h3 className="font-bold text-lg mb-2 text-amber-500">Key Points</h3>
-          <p className="text-sm">Extract the most important highlights and core definitions from long documents in seconds.</p>
+          <h3 className="font-bold text-lg mb-2">Key Points</h3>
+          <p className="text-sm">Extract important concepts and highlights from long documents instantly.</p>
         </div>
       ),
       placement: "bottom",
     },
     {
-      target: "#tour-mode-q-a-generation",
+      target: "#tour-qna",
       content: (
         <div className="text-left">
-          <h3 className="font-bold text-lg mb-2 text-blue-500">Q&A Generation</h3>
-          <p className="text-sm">Turn your notes into exam-oriented questions and answers. Perfect for test preparation!</p>
+          <h3 className="font-bold text-lg mb-2">Q&A Generation</h3>
+          <p className="text-sm">Generate exam-oriented questions and answers from your study material.</p>
         </div>
       ),
       placement: "bottom",
     },
     {
-      target: "#tour-mode-summary",
+      target: "#tour-summary",
       content: (
         <div className="text-left">
-          <h3 className="font-bold text-lg mb-2 text-purple-500">Summary</h3>
-          <p className="text-sm">Create concise and perfectly structured markdown summaries for quick, high-yield revision.</p>
+          <h3 className="font-bold text-lg mb-2">Summary</h3>
+          <p className="text-sm">Create concise and structured summaries for quick revision.</p>
         </div>
       ),
       placement: "bottom",
     },
     {
-      target: "#tour-mode-interactive-quiz",
+      target: "#tour-quiz",
       content: (
         <div className="text-left">
-          <h3 className="font-bold text-lg mb-2 text-orange-500">Interactive Quiz</h3>
-          <p className="text-sm">Test your knowledge with a conversational quiz generated directly from your notes!</p>
+          <h3 className="font-bold text-lg mb-2">Interactive Quiz</h3>
+          <p className="text-sm">Test your knowledge with an interactive conversational quiz generated from your notes.</p>
         </div>
       ),
       placement: "bottom",
@@ -132,7 +122,6 @@ export default function OnboardingTour() {
 
   return (
     <Joyride
-      key={tourKey}
       callback={handleJoyrideCallback}
       continuous
       hideCloseButton
@@ -140,10 +129,7 @@ export default function OnboardingTour() {
       scrollToFirstStep
       showProgress
       showSkipButton
-      locale={{ skip: 'End Tour' }}
       steps={steps}
-      disableScrollParentFix
-      scrollOffset={150}
       styles={{
         options: {
           zIndex: 10000,

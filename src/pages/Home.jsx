@@ -18,7 +18,6 @@ export default function Home() {
       title: "Compare Mode",
       description: "Compare multiple topics side-by-side to understand differences and similarities.",
       route: "/chat/compare",
-      isNew: true,
     },
     {
       title: "Flashcards",
@@ -77,7 +76,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen flex flex-col bg-background font-sans overflow-x-hidden selection:bg-indigo-500/30">
       <OnboardingTour />
       {/* Decorative 3D floating blur orbs with motion */}
       <motion.div 
@@ -114,13 +113,6 @@ export default function Home() {
           <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
         </div>
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => window.dispatchEvent(new Event("restart-tour"))}
-            className="text-sm font-semibold px-4 py-2 rounded-full bg-indigo-500/10 text-indigo-500 hover:bg-indigo-500/20 transition-colors hidden sm:flex items-center gap-2"
-          >
-            <SparklesIcon size={16} />
-            Tour
-          </button>
           <div id="tour-theme-toggle">
             <ThemeSelector />
           </div>
@@ -175,23 +167,20 @@ export default function Home() {
           
           <div className="w-full pb-12 pt-4 px-6 md:px-12 xl:px-24">
             <div id="tour-study-modes" className="flex flex-wrap justify-center md:justify-start gap-6 rounded-2xl p-2 -m-2">
-              {modes.map((mode) => {
-                const tourId = `tour-mode-${mode.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-                return (
-                  <div 
-                    key={mode.title} 
-                    id={tourId}
-                    className="flex justify-center w-full sm:w-auto"
-                  >
-                    <ModeCard
-                      title={mode.title}
-                      description={mode.description}
-                      onClick={() => navigate(mode.route)}
-                      isNew={mode.isNew}
-                    />
-                  </div>
-                );
-              })}
+              {modes.map((mode) => (
+                <div 
+                  key={mode.title} 
+                  id={`tour-${mode.route.split('/').pop()}`}
+                  className="flex justify-center w-full sm:w-auto"
+                >
+                  <ModeCard
+                    title={mode.title}
+                    description={mode.description}
+                    onClick={() => navigate(mode.route)}
+                    isHighlighted={mode.title === "Compare Mode"}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </section>

@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon, CompareIcon } from "./Icons";
 
-export default function ModeCard({ title, description, onClick, isNew }) {
+export default function ModeCard({ title, description, onClick, isHighlighted = false }) {
   const ref = useRef(null);
   
   const x = useMotionValue(0);
@@ -61,18 +61,8 @@ export default function ModeCard({ title, description, onClick, isNew }) {
       }}
       whileHover={{ scale: 1.02, zIndex: 10 }}
       whileTap={{ scale: 0.98 }}
-      className={`group relative flex flex-col justify-between w-full max-w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl border ${isNew ? 'border-rose-500/50 shadow-lg shadow-rose-500/20' : 'border-border/50'} bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()}`}
+      className={`group relative flex flex-col justify-between w-full max-w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()} ${isHighlighted ? 'border-2 border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)] hover:shadow-[0_0_25px_rgba(244,63,94,0.6)]' : 'border border-border/50'}`}
     >
-      {isNew && (
-        <div className="absolute -top-3 -right-3 z-20">
-          <span className="relative flex h-8 w-16 items-center justify-center">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-8 w-16 bg-rose-500 text-white font-bold text-xs items-center justify-center shadow-lg uppercase tracking-wider">
-              NEW
-            </span>
-          </span>
-        </div>
-      )}
       <div 
         style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
         className="flex flex-row items-center justify-between pointer-events-none"
