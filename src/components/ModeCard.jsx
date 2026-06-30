@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { QnaIcon, SummaryIcon, KeyPointsIcon, FlashcardIcon, CompareIcon } from "./Icons";
 
-export default function ModeCard({ title, description, onClick, isHighlighted = false }) {
+export default function ModeCard({ title, description, onClick, highlight }) {
   const ref = useRef(null);
   
   const x = useMotionValue(0);
@@ -61,8 +61,18 @@ export default function ModeCard({ title, description, onClick, isHighlighted = 
       }}
       whileHover={{ scale: 1.02, zIndex: 10 }}
       whileTap={{ scale: 0.98 }}
-      className={`group relative flex flex-col justify-between w-full max-w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl hover:shadow-indigo-500/20 ${getGradient()} ${isHighlighted ? 'border-2 border-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.4)] hover:shadow-[0_0_25px_rgba(244,63,94,0.6)]' : 'border border-border/50'}`}
+      className={`group relative flex flex-col justify-between w-full max-w-[320px] h-[280px] p-6 cursor-pointer rounded-2xl border ${highlight ? 'border-rose-500/50 shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:shadow-[0_0_25px_rgba(244,63,94,0.5)]' : 'border-border/50 hover:shadow-indigo-500/20'} bg-background/50 backdrop-blur-xl bg-gradient-to-br transition-shadow hover:shadow-2xl ${getGradient()}`}
     >
+      {highlight && (
+        <div style={{ transform: "translateZ(60px)" }} className="absolute -top-3 -right-3">
+          <div className="relative flex items-center justify-center">
+            <div className="absolute inset-0 bg-rose-500 rounded-full blur animate-pulse opacity-50"></div>
+            <span className="relative bg-gradient-to-r from-rose-500 to-pink-600 text-white text-[10px] font-black uppercase tracking-widest py-1 px-3 rounded-full shadow-lg border border-white/20">
+              New
+            </span>
+          </div>
+        </div>
+      )}
       <div 
         style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
         className="flex flex-row items-center justify-between pointer-events-none"
