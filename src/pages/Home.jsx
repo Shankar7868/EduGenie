@@ -100,18 +100,18 @@ export default function Home() {
       {/* Grid Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-[1]"></div>
 
-      <header className="h-20 flex justify-between items-center px-6 md:px-10 border-b border-border/40 backdrop-blur-md z-10 relative">
-        <div className="flex items-center gap-3">
+      <header className="h-20 flex justify-between items-center px-4 sm:px-6 md:px-10 border-b border-border/40 backdrop-blur-md z-10 relative">
+        <div className="flex items-center gap-2 sm:gap-3">
           <motion.div 
             whileHover={{ scale: 1.05, rotate: 5 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(99,102,241,0.35)] ring-1 ring-white/10"
+            className="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(99,102,241,0.35)] ring-1 ring-white/10"
           >
             <img src="/logo.jpg" alt="EduGenie Logo" className="w-full h-full object-cover" />
           </motion.div>
-          <span className="font-extrabold text-2xl tracking-tight text-foreground">EduGenie</span>
+          <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-foreground hidden sm:inline-block">EduGenie</span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <ThemeSelector />
           {user ? (
             <div className="flex items-center gap-3">
