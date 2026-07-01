@@ -146,6 +146,19 @@ export default function Home() {
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
             Experience the next generation of learning. Instantly extract summaries, interactive flashcards, and exam questions from your course materials.
           </motion.p>
+          
+          <motion.div variants={itemVariants} className="mt-10 flex items-center justify-center">
+            <a 
+              href="/EduGenie.apk" 
+              download="EduGenie.apk"
+              className="group relative inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-8 py-4 text-sm font-bold text-white shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all hover:scale-105"
+            >
+              <svg className="w-5 h-5 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download Android App
+            </a>
+          </motion.div>
         </motion.section>
 
         {/* Study Modes Grid Section */}
