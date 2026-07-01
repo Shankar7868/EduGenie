@@ -216,33 +216,55 @@ export default function ChatPage() {
 
       const webhookUrl = import.meta.env.VITE_WEBHOOK_URL;
       
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorMsg = response.status === 503 
-          ? "Service Unavailable (503): The backend n8n workflow is currently offline or the webhook tunnel is disconnected. Please ensure your API is active."
-          : `Server returned status code: ${response.status}`;
-        throw new Error(errorMsg);
-      }
-
-      const text = await response.text();
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch {
-        result = text;
-      }
-
+      let success = false;
       let aiResponseText = "";
-      if (typeof result === "string") {
-        aiResponseText = result;
-      } else if (result && result.output) {
-        aiResponseText = result.output;
-      } else {
-        aiResponseText = JSON.stringify(result, null, 2);
+      let attempts = 0;
+      let lastError = null;
+
+      while (!success && attempts < 20) {
+        attempts++;
+        try {
+          const response = await fetch(webhookUrl, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error(response.status === 503 ? "Service Unavailable (503)" : `Server returned status code: ${response.status}`);
+          }
+
+          const text = await response.text();
+          let result;
+          try {
+            result = JSON.parse(text);
+          } catch {
+            result = text;
+          }
+
+          if (typeof result === "string") {
+            aiResponseText = result;
+          } else if (result && result.output) {
+            aiResponseText = result.output;
+          } else {
+            aiResponseText = JSON.stringify(result, null, 2);
+          }
+
+          if (aiResponseText && aiResponseText.trim().length > 0 && aiResponseText !== '""' && aiResponseText !== "{}") {
+            success = true;
+          } else {
+            throw new Error("Received an empty response from the backend");
+          }
+        } catch (err) {
+          lastError = err;
+          console.warn(`Attempt ${attempts} failed: ${err.message}. Retrying in 2 seconds...`);
+          if (attempts < 20) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+        }
+      }
+
+      if (!success) {
+        throw new Error(lastError ? lastError.message : "Failed to get a valid response after multiple attempts.");
       }
 
       const aiMessage = {
